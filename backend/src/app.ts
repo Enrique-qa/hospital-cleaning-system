@@ -7,6 +7,7 @@ import { cleaningRecordRoutes } from "./routes/cleaningRecordRoutes";
 import { dashboardRoutes } from "./routes/dashboardRoutes";
 import { uploadRoutes } from "./routes/uploadRoutes";
 import path from "path";
+import { reportRoutes } from "./routes/reportRoutes";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cleaningEntityRoutes);
 app.use(cleaningRecordRoutes);
 app.use(dashboardRoutes);
 app.use(uploadRoutes);
+app.use(reportRoutes);
 
 app.get("/", (req, res) => {
   return res.json({

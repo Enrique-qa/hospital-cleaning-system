@@ -5,6 +5,7 @@ import {
   Building2,
   Check,
   ClipboardList,
+  MessageSquareWarning,
   Plus,
   QrCode,
   Sparkles,
@@ -290,6 +291,14 @@ export function DashboardPage() {
             >
               <QrCode size={18} />
               QR Codes
+            </Link>
+
+            <Link
+              to="/reports/cleaning-records"
+              className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+            >
+              <MessageSquareWarning size={18}/>
+              Relatórios
             </Link>
 
             <Link

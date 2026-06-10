@@ -8,6 +8,7 @@ import { QrPrintPage } from "./pages/QrPrintPage";
 import { QrReportPage } from "./pages/QrReportPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { EditEntityPage } from "./pages/EditEntityPage";
+import { CleaningRecordsReportPage } from "./pages/CleaningRecordsReportPage";
 
 function App() {
   return (
@@ -22,6 +23,10 @@ function App() {
         <Route path="/entities/:slug/qr-print" element={<QrPrintPage />} />
         <Route path="/entities/qr-report" element={<QrReportPage />} />
         <Route path="/entities/:slug/edit" element={<EditEntityPage />} />
+        <Route
+          path="/reports/cleaning-records"
+          element={<CleaningRecordsReportPage />}
+        />
       </Routes>
     </BrowserRouter>
   );

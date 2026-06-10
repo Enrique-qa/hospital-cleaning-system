@@ -2,6 +2,17 @@
 
 Projeto web interno para controle de limpeza hospitalar.
 
+## Funcionalidades
+
+- Cadastro de funcionárias
+- Cadastro de ambientes e equipamentos
+- Registro de limpezas
+- QR Codes individuais
+- Impressão de etiquetas
+- Dashboard operacional
+- Upload de imagens
+- Histórico de limpezas
+
 ## Stack
 
 - Backend: Node.js, Express, TypeScript, Prisma ORM, PostgreSQL
