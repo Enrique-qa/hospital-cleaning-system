@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("MANAGER")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id           Int      @id @default(autoincrement())
+  employeeCode String?  @unique
+  name         String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  cleaningRecords CleaningRecord[]
+}
+
+model CleaningEntity {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  type        String
+  sector      String?
+  location    String?
+  imageUrl    String?
+  description String?
+
+  cleaningSteps String
+  products      String?
+  frequency     String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cleaningRecords CleaningRecord[]
+}
+
+model CleaningRecord {
+  id Int @id @default(autoincrement())
+
+  entityId   Int
+  employeeId Int
+
+  entity   CleaningEntity @relation(fields: [entityId], references: [id])
+  employee Employee       @relation(fields: [employeeId], references: [id])
+
+  employeeNameTyped String
+  observation       String?
+
+  cleanedAt DateTime @default(now())
+}
