@@ -1,7 +1,15 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return (
+    (error as AxiosError<{ message?: string }>).response?.data?.message ||
+    fallback
+  );
+}
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -27,11 +35,8 @@ export function LoginPage() {
       await signIn(username, password);
 
       navigate("/", { replace: true });
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Não foi possível realizar login.";
-
-      setError(message);
+    } catch (error) {
+      setError(getErrorMessage(error, "Não foi possível realizar login."));
     } finally {
       setLoading(false);
     }

@@ -18,6 +18,13 @@ type CleaningEntity = {
   active: boolean;
 };
 
+type PublicCleaningRecord = {
+  cleanedAt: string;
+  employee: {
+    name: string;
+  };
+};
+
 function getErrorMessage(error: unknown, fallback: string) {
   return (
     (error as AxiosError<{ message?: string }>).response?.data?.message ||
@@ -35,6 +42,8 @@ export function PublicCleaningPage() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [successRecord, setSuccessRecord] =
+    useState<PublicCleaningRecord | null>(null);
 
   useEffect(() => {
     async function loadEntity() {
@@ -61,6 +70,7 @@ export function PublicCleaningPage() {
 
     setError("");
     setSuccess("");
+    setSuccessRecord(null);
 
     if (!employeeIdentifier.trim()) {
       setError("Digite seu nome ou código para registrar a limpeza.");
@@ -70,11 +80,15 @@ export function PublicCleaningPage() {
     try {
       setSaving(true);
 
-      await api.post(`/cleaning-records/public/${slug}`, {
-        employeeIdentifier,
-      });
+      const response = await api.post<PublicCleaningRecord>(
+        `/cleaning-records/public/${slug}`,
+        {
+          employeeIdentifier,
+        }
+      );
 
       setSuccess("Limpeza registrada com sucesso.");
+      setSuccessRecord(response.data);
       setEmployeeIdentifier("");
     } catch (error) {
       setError(
@@ -219,10 +233,14 @@ export function PublicCleaningPage() {
             </p>
           )}
 
-          {success && (
-            <p className="mt-3 rounded-xl bg-green-50 px-3 py-2 text-sm text-green-700">
-              {success}
-            </p>
+          {success && successRecord && (
+            <div className="mt-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800">
+              <p className="text-sm font-bold">{success}</p>
+              <p className="mt-1 text-sm">
+                {successRecord.employee.name} •{" "}
+                {new Date(successRecord.cleanedAt).toLocaleString("pt-BR")}
+              </p>
+            </div>
           )}
 
           <button

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import type { AxiosError } from "axios";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
 
 type Employee = {
@@ -11,9 +13,18 @@ type Employee = {
   updatedAt: string;
 };
 
+function getErrorMessage(error: unknown, fallback: string) {
+  return (
+    (error as AxiosError<{ message?: string }>).response?.data?.message ||
+    fallback
+  );
+}
+
 export function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [name, setName] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -27,8 +38,27 @@ export function EmployeesPage() {
   }
 
   useEffect(() => {
-    loadEmployees();
+    api
+      .get<Employee[]>("/employees")
+      .then((response) => setEmployees(response.data))
+      .finally(() => setLoading(false));
   }, []);
+
+  const filteredEmployees = useMemo(() => {
+    const term = search.trim().toLowerCase();
+
+    return employees.filter((employee) => {
+      const matchesSearch =
+        !term ||
+        employee.name.toLowerCase().includes(term) ||
+        employee.employeeCode?.toLowerCase().includes(term);
+      const matchesStatus =
+        statusFilter === "ALL" ||
+        (statusFilter === "ACTIVE" ? employee.active : !employee.active);
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [employees, search, statusFilter]);
 
   async function handleCreate(event: React.FormEvent) {
     event.preventDefault();
@@ -51,10 +81,8 @@ export function EmployeesPage() {
       setName("");
       setSuccess("Funcionário cadastrado com sucesso.");
       await loadEmployees();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Não foi possível cadastrar.";
-      setError(message);
+    } catch (error) {
+      setError(getErrorMessage(error, "Não foi possível cadastrar."));
     } finally {
       setSaving(false);
     }
@@ -76,33 +104,20 @@ export function EmployeesPage() {
       );
 
       await loadEmployees();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Não foi possível atualizar.";
-      setError(message);
+    } catch (error) {
+      setError(getErrorMessage(error, "Não foi possível atualizar."));
     }
   }
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-4xl space-y-4">
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link to="/" className="text-sm font-semibold text-emerald-700">
-            ← Voltar ao dashboard
-          </Link>
-
-          <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            Gestão
-          </p>
-
-          <h1 className="mt-1 text-2xl font-bold text-slate-950">
-            Funcionários
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-600">
-            Cadastre colaboradoras autorizadas a registrar limpezas pelo QR Code.
-          </p>
-        </div>
+        <AdminHeader
+          title="Funcionárias"
+          description="Cadastre colaboradoras autorizadas a registrar limpezas pelo QR Code."
+          backTo="/"
+          backLabel="Voltar ao dashboard"
+        />
 
         <form
           onSubmit={handleCreate}
@@ -143,25 +158,44 @@ export function EmployeesPage() {
         </form>
 
         <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <h2 className="text-base font-bold text-slate-950">
               Lista de funcionários
             </h2>
 
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
-              {employees.length} cadastros
+              {filteredEmployees.length} cadastros
             </span>
+          </div>
+
+          <div className="mt-4 grid gap-2 md:grid-cols-[1fr_180px]">
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar por nome ou código"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            />
+
+            <select
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            >
+              <option value="ALL">Todos os status</option>
+              <option value="ACTIVE">Ativas</option>
+              <option value="INACTIVE">Inativas</option>
+            </select>
           </div>
 
           {loading ? (
             <p className="mt-4 text-sm text-slate-600">Carregando...</p>
-          ) : employees.length === 0 ? (
+          ) : filteredEmployees.length === 0 ? (
             <p className="mt-4 text-sm text-slate-600">
-              Nenhum funcionário cadastrado.
+              Nenhuma funcionária encontrada.
             </p>
           ) : (
             <div className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
-              {employees.map((employee) => (
+              {filteredEmployees.map((employee) => (
                 <div
                   key={employee.id}
                   className="grid gap-3 p-4 md:grid-cols-[100px_1fr_auto] md:items-center"

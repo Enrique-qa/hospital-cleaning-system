@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { AxiosError } from "axios";
 import { Link } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
 
 type CleaningRecord = {
@@ -103,19 +104,12 @@ export function CleaningRecordsReportPage() {
     return (
         <main className="min-h-screen bg-slate-100 px-4 py-5">
             <section className="mx-auto max-w-6xl space-y-4">
-                <div className="rounded-2xl bg-white p-5 shadow-sm">
-                    <Link to="/" className="text-sm font-semibold text-emerald-700">
-                        ← Voltar ao dashboard
-                    </Link>
-
-                    <h1 className="mt-3 text-2xl font-black text-slate-950">
-                        Relatório de limpezas
-                    </h1>
-
-                    <p className="mt-2 text-sm text-slate-600">
-                        Consulte registros de higienização por período.
-                    </p>
-                </div>
+                <AdminHeader
+                    title="Relatório de limpezas"
+                    description="Consulte registros de higienização por período."
+                    backTo="/reports"
+                    backLabel="Voltar para relatórios"
+                />
 
                 <div className="rounded-2xl bg-white p-5 shadow-sm">
                     <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">

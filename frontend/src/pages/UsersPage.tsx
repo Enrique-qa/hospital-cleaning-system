@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
@@ -12,6 +13,13 @@ type User = {
   createdAt: string;
   updatedAt: string;
 };
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return (
+    (error as AxiosError<{ message?: string }>).response?.data?.message ||
+    fallback
+  );
+}
 
 export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -33,7 +41,10 @@ export function UsersPage() {
   }
 
   useEffect(() => {
-    loadUsers();
+    api
+      .get<User[]>("/users")
+      .then((response) => setUsers(response.data))
+      .finally(() => setLoading(false));
   }, []);
 
   async function handleCreate(event: React.FormEvent) {
@@ -64,10 +75,10 @@ export function UsersPage() {
 
       setSuccess("Usuário cadastrado com sucesso.");
       await loadUsers();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Não foi possível cadastrar usuário.";
-      setError(message);
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "Não foi possível cadastrar usuário.")
+      );
     } finally {
       setSaving(false);
     }
@@ -76,11 +87,12 @@ export function UsersPage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6">
       <section className="mx-auto max-w-6xl space-y-5">
-        <Link to="/" className="inline-flex text-sm font-semibold text-emerald-700">
-          ← Voltar ao dashboard
-        </Link>
-
-        <AdminHeader title="Usuários" />
+        <AdminHeader
+          title="Usuários"
+          description="Gerencie os acessos administrativos do sistema."
+          backTo="/"
+          backLabel="Voltar ao dashboard"
+        />
 
         <form
           onSubmit={handleCreate}

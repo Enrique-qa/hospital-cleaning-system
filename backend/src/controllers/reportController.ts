@@ -33,7 +33,7 @@ function parseLocalDate(value: unknown, endOfDay = false) {
 
 export class ReportController {
   async cleaningRecords(req: Request, res: Response) {
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, employeeId, entityId } = req.query;
 
     if (!startDate || !endDate) {
       return res.status(400).json({
@@ -58,12 +58,37 @@ export class ReportController {
       });
     }
 
+    const normalizedEmployeeId =
+      employeeId === undefined ? undefined : Number(employeeId);
+    const normalizedEntityId =
+      entityId === undefined ? undefined : Number(entityId);
+
+    if (
+      normalizedEmployeeId !== undefined &&
+      !Number.isInteger(normalizedEmployeeId)
+    ) {
+      return res.status(400).json({
+        message: "Funcionária inválida.",
+      });
+    }
+
+    if (
+      normalizedEntityId !== undefined &&
+      !Number.isInteger(normalizedEntityId)
+    ) {
+      return res.status(400).json({
+        message: "Entidade inválida.",
+      });
+    }
+
     const records = await prisma.cleaningRecord.findMany({
       where: {
         cleanedAt: {
           gte: start,
           lte: end,
         },
+        employeeId: normalizedEmployeeId,
+        entityId: normalizedEntityId,
       },
       include: {
         employee: true,
@@ -77,6 +102,8 @@ export class ReportController {
     return res.json({
       startDate: startDateText,
       endDate: endDateText,
+      employeeId: normalizedEmployeeId ?? null,
+      entityId: normalizedEntityId ?? null,
       total: records.length,
       records,
     });

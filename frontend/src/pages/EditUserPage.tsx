@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { AxiosError } from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
 
 type User = {
@@ -100,19 +101,12 @@ export function EditUserPage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-3xl space-y-4">
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link to="/users" className="text-sm font-semibold text-emerald-700">
-            ← Voltar para usuários
-          </Link>
-
-          <h1 className="mt-3 text-2xl font-black text-slate-950">
-            Editar usuário
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-600">
-            Atualize os dados, o perfil de acesso e o status do usuário.
-          </p>
-        </div>
+        <AdminHeader
+          title="Editar usuário"
+          description="Atualize os dados, o perfil de acesso e o status do usuário."
+          backTo="/users"
+          backLabel="Voltar para usuários"
+        />
 
         {user ? (
           <form

@@ -1,8 +1,23 @@
+import type { ReactNode } from "react";
 import { LogOut, User } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export function AdminHeader({ title }: { title: string }) {
+type AdminHeaderProps = {
+  title: string;
+  description?: string;
+  backTo?: string;
+  backLabel?: string;
+  actions?: ReactNode;
+};
+
+export function AdminHeader({
+  title,
+  description,
+  backTo,
+  backLabel = "Voltar",
+  actions,
+}: AdminHeaderProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -15,6 +30,15 @@ export function AdminHeader({ title }: { title: string }) {
     <header className="rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div className="text-center md:text-left">
+          {backTo && (
+            <Link
+              to={backTo}
+              className="mb-4 inline-flex text-sm font-semibold text-emerald-700"
+            >
+              ← {backLabel}
+            </Link>
+          )}
+
           <p className="text-base font-extrabold uppercase tracking-[0.18em] text-blue-700">
             Hospital São Lucas
           </p>
@@ -23,9 +47,17 @@ export function AdminHeader({ title }: { title: string }) {
             Controle de Higienização
           </p>
 
-          <h1 className="mt-5 text-3xl font-black text-slate-950">
+          <h1 className="mt-4 text-3xl font-black text-slate-950">
             {title}
           </h1>
+
+          {description && (
+            <p className="mt-2 max-w-2xl text-sm text-slate-600">
+              {description}
+            </p>
+          )}
+
+          {actions && <div className="mt-4">{actions}</div>}
         </div>
 
         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">

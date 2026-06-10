@@ -15,6 +15,8 @@ import { UsersPage } from "./pages/UsersPage";
 import { AdminRoute } from "./components/AdminRoute";
 import { EditUserPage } from "./pages/EditUserPage";
 import { EditEmployeePage } from "./pages/EditEmployeePage";
+import { ReportsPage } from "./pages/ReportsPage";
+import { CleaningRecordsDimensionReportPage } from "./pages/CleaningRecordsDimensionReportPage";
 
 function App() {
   return (
@@ -106,10 +108,37 @@ function App() {
         />
 
         <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/reports/cleaning-records"
           element={
             <ProtectedRoute>
               <CleaningRecordsReportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports/employees"
+          element={
+            <ProtectedRoute>
+              <CleaningRecordsDimensionReportPage dimension="employee" />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports/entities"
+          element={
+            <ProtectedRoute>
+              <CleaningRecordsDimensionReportPage dimension="entity" />
             </ProtectedRoute>
           }
         />

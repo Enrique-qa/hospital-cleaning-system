@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
 
 type CleaningEntity = {
@@ -31,22 +32,19 @@ type CleaningEntity = {
 export function EntitiesPage() {
   const [entities, setEntities] = useState<CleaningEntity[]>([]);
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
 
-  async function loadEntities() {
-    const response = await api.get("/cleaning-entities");
-    setEntities(response.data);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    loadEntities();
+    api
+      .get<CleaningEntity[]>("/cleaning-entities")
+      .then((response) => setEntities(response.data))
+      .finally(() => setLoading(false));
   }, []);
 
   const filteredEntities = useMemo(() => {
     const term = search.toLowerCase().trim();
-
-    if (!term) return entities;
 
     return entities.filter((entity) => {
       const text = [
@@ -60,33 +58,25 @@ export function EntitiesPage() {
         .join(" ")
         .toLowerCase();
 
-      return text.includes(term);
+      const matchesSearch = !term || text.includes(term);
+      const matchesType = typeFilter === "ALL" || entity.type === typeFilter;
+      const matchesStatus =
+        statusFilter === "ALL" ||
+        (statusFilter === "ACTIVE" ? entity.active : !entity.active);
+
+      return matchesSearch && matchesType && matchesStatus;
     });
-  }, [entities, search]);
+  }, [entities, search, statusFilter, typeFilter]);
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-5xl space-y-4">
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link to="/" className="text-sm font-semibold text-emerald-700">
-            ← Voltar ao dashboard
-          </Link>
-
-          <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                Gestão
-              </p>
-
-              <h1 className="mt-1 text-2xl font-bold text-slate-950">
-                Entidades de limpeza
-              </h1>
-
-              <p className="mt-2 text-sm text-slate-600">
-                Consulte ambientes e equipamentos cadastrados no sistema.
-              </p>
-            </div>
-
+        <AdminHeader
+          title="Entidades de limpeza"
+          description="Consulte ambientes e equipamentos cadastrados no sistema."
+          backTo="/"
+          backLabel="Voltar ao dashboard"
+          actions={
             <div className="flex flex-col gap-2 sm:flex-row">
               <Link
                 to="/entities/qr-report"
@@ -102,11 +92,11 @@ export function EntitiesPage() {
                 Nova entidade
               </Link>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3">
             <div>
               <h2 className="text-base font-bold text-slate-950">
                 Entidades cadastradas
@@ -117,12 +107,34 @@ export function EntitiesPage() {
               </p>
             </div>
 
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por nome, setor, tipo..."
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 md:max-w-xs"
-            />
+            <div className="grid gap-2 md:grid-cols-[1fr_180px_180px]">
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Buscar por nome, setor, tipo ou localização"
+                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+              />
+
+              <select
+                value={typeFilter}
+                onChange={(event) => setTypeFilter(event.target.value)}
+                className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+              >
+                <option value="ALL">Todos os tipos</option>
+                <option value="AMBIENTE">Ambientes</option>
+                <option value="EQUIPAMENTO">Equipamentos</option>
+              </select>
+
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+                className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+              >
+                <option value="ALL">Todos os status</option>
+                <option value="ACTIVE">Ativas</option>
+                <option value="INACTIVE">Inativas</option>
+              </select>
+            </div>
           </div>
 
           {loading ? (
@@ -188,6 +200,13 @@ export function EntitiesPage() {
                           className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
                         >
                           Abrir
+                        </Link>
+
+                        <Link
+                          to={`/entities/${entity.slug}/edit`}
+                          className="rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
+                        >
+                          Editar
                         </Link>
 
                         <Link

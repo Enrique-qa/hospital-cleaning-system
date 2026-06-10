@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { API_BASE_URL, api } from "../services/api";
 import { uploadEntityImage } from "../services/uploadEntityImage";
 
@@ -17,6 +19,13 @@ const initialForm = {
 
 const initialProducts = [""];
 const initialSteps = [""];
+
+function getErrorMessage(error: unknown, fallback: string) {
+    return (
+        (error as AxiosError<{ message?: string }>).response?.data?.message ||
+        fallback
+    );
+}
 
 export function NewEntityPage() {
     const navigate = useNavigate();
@@ -117,10 +126,8 @@ export function NewEntityPage() {
             });
 
             navigate(`/entities/${response.data.slug}`);
-        } catch (error: any) {
-            const message =
-                error.response?.data?.message || "Não foi possível cadastrar.";
-            setError(message);
+        } catch (error) {
+            setError(getErrorMessage(error, "Não foi possível cadastrar."));
         } finally {
             setSaving(false);
         }
@@ -136,19 +143,22 @@ export function NewEntityPage() {
         return `${API_BASE_URL}${imageUrl}`;
     }
 
-    async function handleImageUpload(file: File) {
+    const handleImageUpload = useCallback(async (file: File) => {
         try {
             setImageUploading(true);
 
             const imageUrl = await uploadEntityImage(file);
 
-            updateForm("imageUrl" as keyof typeof initialForm, imageUrl);
+            setForm((current) => ({
+                ...current,
+                imageUrl,
+            }));
         } catch {
             setError("Não foi possível enviar a imagem.");
         } finally {
             setImageUploading(false);
         }
-    }
+    }, []);
 
     async function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
@@ -181,27 +191,17 @@ export function NewEntityPage() {
         return () => {
             window.removeEventListener("paste", handlePaste);
         };
-    }, []);
+    }, [handleImageUpload]);
 
     return (
         <main className="min-h-screen bg-slate-100 px-4 py-5">
             <section className="mx-auto max-w-3xl space-y-4">
-                <div className="rounded-2xl bg-white p-5 shadow-sm">
-                    <Link
-                        to="/entities"
-                        className="text-sm font-semibold text-emerald-700"
-                    >
-                        ← Voltar para entidades
-                    </Link>
-
-                    <h1 className="mt-3 text-2xl font-bold text-slate-950">
-                        Nova entidade
-                    </h1>
-
-                    <p className="mt-2 text-sm text-slate-600">
-                        Cadastre um ambiente ou equipamento que terá controle de limpeza por QR Code.
-                    </p>
-                </div>
+                <AdminHeader
+                    title="Nova entidade"
+                    description="Cadastre um ambiente ou equipamento que terá controle de limpeza por QR Code."
+                    backTo="/entities"
+                    backLabel="Voltar para entidades"
+                />
 
                 <div className="rounded-2xl bg-white p-5 shadow-sm">
                     <div className="grid grid-cols-3 gap-2">

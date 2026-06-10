@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import type { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { AdminHeader } from "../components/AdminHeader";
 import { API_BASE_URL, api } from "../services/api";
 import { uploadEntityImage } from "../services/uploadEntityImage";
 
@@ -18,6 +20,13 @@ type CleaningEntity = {
   active: boolean;
 };
 
+function getErrorMessage(error: unknown, fallback: string) {
+  return (
+    (error as AxiosError<{ message?: string }>).response?.data?.message ||
+    fallback
+  );
+}
+
 export function EditEntityPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -27,6 +36,27 @@ export function EditEntityPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
+
+  const handleImageUpload = useCallback(async (file: File) => {
+    try {
+      setImageUploading(true);
+
+      const imageUrl = await uploadEntityImage(file);
+
+      setEntity((current) => {
+        if (!current) return current;
+
+        return {
+          ...current,
+          imageUrl,
+        };
+      });
+    } catch {
+      setError("Não foi possível enviar a imagem.");
+    } finally {
+      setImageUploading(false);
+    }
+  }, []);
 
   useEffect(() => {
     async function loadEntity() {
@@ -66,7 +96,7 @@ export function EditEntityPage() {
     return () => {
       window.removeEventListener("paste", handlePaste);
     };
-  }, [entity]);
+  }, [handleImageUpload]);
 
   function updateField(field: keyof CleaningEntity, value: string | boolean) {
     setEntity((current) => {
@@ -107,10 +137,10 @@ export function EditEntityPage() {
       });
 
       navigate(`/entities/${entity.slug}`, { replace: true });
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Não foi possível salvar alterações.";
-      setError(message);
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "Não foi possível salvar alterações.")
+      );
     } finally {
       setSaving(false);
     }
@@ -144,20 +174,6 @@ export function EditEntityPage() {
     return `${API_BASE_URL}${imageUrl}`;
   }
 
-  async function handleImageUpload(file: File) {
-    try {
-      setImageUploading(true);
-
-      const imageUrl = await uploadEntityImage(file);
-
-      updateField("imageUrl", imageUrl);
-    } catch {
-      setError("Não foi possível enviar a imagem.");
-    } finally {
-      setImageUploading(false);
-    }
-  }
-
   async function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
@@ -169,22 +185,12 @@ export function EditEntityPage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-4xl space-y-4">
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link
-            to={`/entities/${entity.slug}`}
-            className="text-sm font-semibold text-emerald-700"
-          >
-            ← Voltar para entidade
-          </Link>
-
-          <h1 className="mt-3 text-2xl font-black text-slate-950">
-            Editar entidade
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-600">
-            Atualize as informações do ambiente ou equipamento.
-          </p>
-        </div>
+        <AdminHeader
+          title="Editar entidade"
+          description="Atualize as informações do ambiente ou equipamento."
+          backTo={`/entities/${entity.slug}`}
+          backLabel="Voltar para entidade"
+        />
 
         <form
           onSubmit={handleSubmit}

@@ -75,7 +75,7 @@ export function QrPrintPage() {
         </button>
       </div>
 
-      <section className="mx-auto flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-emerald-700 bg-white p-[0.35cm] text-center shadow-sm print:shadow-none">
+      <section className="mx-auto flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-black bg-white p-[0.35cm] text-center shadow-sm print:shadow-none">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-blue-700">
             Hospital São Lucas

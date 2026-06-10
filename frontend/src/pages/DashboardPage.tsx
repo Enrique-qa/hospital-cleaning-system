@@ -8,6 +8,7 @@ import {
   MessageSquareWarning,
   Plus,
   QrCode,
+  RefreshCw,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -44,15 +45,24 @@ type DashboardData = {
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
 
-  useEffect(() => {
-    async function loadDashboard() {
+  async function loadDashboard(showRefreshing = false) {
+    if (showRefreshing) setRefreshing(true);
+
+    try {
       const response = await api.get("/dashboard");
       setData(response.data);
+    } finally {
+      if (showRefreshing) setRefreshing(false);
     }
+  }
 
-    loadDashboard();
+  useEffect(() => {
+    api
+      .get<DashboardData>("/dashboard")
+      .then((response) => setData(response.data));
   }, []);
 
   if (!data) {
@@ -68,9 +78,21 @@ export function DashboardPage() {
       <section className="mx-auto max-w-6xl space-y-5">
         <AdminHeader title="Dashboard" />
 
-        <p className="mx-auto max-w-2xl text-center text-md leading-relaxed text-slate-600">
-          Acompanhe os registros de limpeza, entidades pendentes e atalhos principais do sistema.
-        </p>
+        <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
+          <p className="max-w-2xl text-center text-md leading-relaxed text-slate-600 md:text-left">
+            Acompanhe os registros de limpeza, entidades pendentes e atalhos principais do sistema.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => loadDashboard(true)}
+            disabled={refreshing}
+            className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 px-4 py-2 text-sm font-bold text-emerald-700 disabled:opacity-60"
+          >
+            <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
+            {refreshing ? "Atualizando..." : "Atualizar"}
+          </button>
+        </div>
 
         <div className="grid gap-3 md:grid-cols-4">
           <Link
@@ -285,7 +307,7 @@ export function DashboardPage() {
             </Link>
 
             <Link
-              to="/reports/cleaning-records"
+              to="/reports"
               className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
             >
               <MessageSquareWarning size={18} />
