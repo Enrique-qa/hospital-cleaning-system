@@ -172,7 +172,7 @@ export function EditEntityPage() {
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <Link
             to={`/entities/${entity.slug}`}
-            className="text-sm font-semibold text-blue-700"
+            className="text-sm font-semibold text-emerald-700"
           >
             ← Voltar para entidade
           </Link>
@@ -199,7 +199,7 @@ export function EditEntityPage() {
               <input
                 value={entity.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -211,7 +211,7 @@ export function EditEntityPage() {
               <select
                 value={entity.type}
                 onChange={(event) => updateField("type", event.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               >
                 <option value="AMBIENTE">Ambiente</option>
                 <option value="EQUIPAMENTO">Equipamento</option>
@@ -228,7 +228,7 @@ export function EditEntityPage() {
                 onChange={(event) =>
                   updateField("active", event.target.value === "true")
                 }
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               >
                 <option value="true">Ativa</option>
                 <option value="false">Inativa</option>
@@ -243,7 +243,7 @@ export function EditEntityPage() {
               <input
                 value={entity.sector || ""}
                 onChange={(event) => updateField("sector", event.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -257,7 +257,7 @@ export function EditEntityPage() {
                 onChange={(event) =>
                   updateField("location", event.target.value)
                 }
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -271,7 +271,7 @@ export function EditEntityPage() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileSelect}
-                  className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+                  className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-emerald-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
                 />
 
                 <p className="mt-3 text-xs text-slate-500">
@@ -279,7 +279,7 @@ export function EditEntityPage() {
                 </p>
 
                 {imageUploading && (
-                  <p className="mt-3 text-sm font-semibold text-blue-700">
+                  <p className="mt-3 text-sm font-semibold text-emerald-700">
                     Enviando imagem...
                   </p>
                 )}
@@ -305,7 +305,7 @@ export function EditEntityPage() {
                   updateField("description", event.target.value)
                 }
                 rows={3}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -321,7 +321,7 @@ export function EditEntityPage() {
                 }
                 rows={6}
                 placeholder={"Álcool 70%\nDetergente neutro\nDesinfetante hospitalar"}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -337,7 +337,7 @@ export function EditEntityPage() {
                 }
                 rows={6}
                 placeholder="Ex: Após cada atendimento"
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
 
@@ -353,7 +353,7 @@ export function EditEntityPage() {
                 }
                 rows={8}
                 placeholder={"Recolher resíduos\nHigienizar superfícies\nFinalizar conforme POP"}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
           </div>
@@ -375,7 +375,7 @@ export function EditEntityPage() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
             >
               {saving ? "Salvando..." : "Salvar alterações"}
             </button>

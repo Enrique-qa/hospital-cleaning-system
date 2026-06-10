@@ -61,7 +61,7 @@ export function QrPrintPage() {
       <div className="mx-auto mb-4 flex max-w-md items-center justify-between gap-3 print:hidden">
         <Link
           to={`/entities/${entity.slug}`}
-          className="text-sm font-semibold text-blue-700"
+          className="text-sm font-semibold text-emerald-700"
         >
           ← Voltar para entidade
         </Link>
@@ -69,13 +69,13 @@ export function QrPrintPage() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white"
+          className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
         >
           Imprimir etiqueta
         </button>
       </div>
 
-      <section className="mx-auto flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-blue-700 bg-white p-[0.35cm] text-center shadow-sm print:shadow-none">
+      <section className="mx-auto flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-emerald-700 bg-white p-[0.35cm] text-center shadow-sm print:shadow-none">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-blue-700">
             Hospital São Lucas

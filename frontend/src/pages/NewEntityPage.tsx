@@ -189,7 +189,7 @@ export function NewEntityPage() {
                 <div className="rounded-2xl bg-white p-5 shadow-sm">
                     <Link
                         to="/entities"
-                        className="text-sm font-semibold text-blue-700"
+                        className="text-sm font-semibold text-emerald-700"
                     >
                         ← Voltar para entidades
                     </Link>
@@ -210,7 +210,7 @@ export function NewEntityPage() {
                                 <div
                                     className={
                                         item <= step
-                                            ? "h-2 rounded-full bg-blue-700"
+                                            ? "h-2 rounded-full bg-emerald-700"
                                             : "h-2 rounded-full bg-slate-200"
                                     }
                                 />
@@ -218,7 +218,7 @@ export function NewEntityPage() {
                                 <p
                                     className={
                                         item <= step
-                                            ? "mt-2 text-xs font-semibold text-blue-700"
+                                            ? "mt-2 text-xs font-semibold text-emerald-700"
                                             : "mt-2 text-xs font-semibold text-slate-400"
                                     }
                                 >
@@ -243,13 +243,13 @@ export function NewEntityPage() {
                                     value={form.name}
                                     onChange={(event) => updateForm("name", event.target.value)}
                                     placeholder="Nome da entidade"
-                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 />
 
                                 <select
                                     value={form.type}
                                     onChange={(event) => updateForm("type", event.target.value)}
-                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 >
                                     <option value="AMBIENTE">Ambiente</option>
                                     <option value="EQUIPAMENTO">Equipamento</option>
@@ -259,7 +259,7 @@ export function NewEntityPage() {
                                     value={form.sector}
                                     onChange={(event) => updateForm("sector", event.target.value)}
                                     placeholder="Setor"
-                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 />
 
                                 <input
@@ -268,7 +268,7 @@ export function NewEntityPage() {
                                         updateForm("location", event.target.value)
                                     }
                                     placeholder="Localização"
-                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 />
 
                                 <textarea
@@ -278,7 +278,7 @@ export function NewEntityPage() {
                                     }
                                     placeholder="Descrição"
                                     rows={3}
-                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                    className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 />
 
                                 <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
@@ -290,7 +290,7 @@ export function NewEntityPage() {
                                         type="file"
                                         accept="image/*"
                                         onChange={handleFileSelect}
-                                        className="mt-3 block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+                                        className="mt-3 block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-emerald-700 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
                                     />
 
                                     <p className="mt-3 text-xs text-slate-500">
@@ -298,7 +298,7 @@ export function NewEntityPage() {
                                     </p>
 
                                     {imageUploading && (
-                                        <p className="mt-3 text-sm font-semibold text-blue-700">
+                                        <p className="mt-3 text-sm font-semibold text-emerald-700">
                                             Enviando imagem...
                                         </p>
                                     )}
@@ -334,7 +334,7 @@ export function NewEntityPage() {
                                                     value={product}
                                                     onChange={(event) => updateProduct(index, event.target.value)}
                                                     placeholder={`Produto ${index + 1}`}
-                                                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                                 />
 
                                                 <button
@@ -351,7 +351,7 @@ export function NewEntityPage() {
                                     <button
                                         type="button"
                                         onClick={addProduct}
-                                        className="mt-2 rounded-xl border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700"
+                                        className="mt-2 rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
                                     >
                                         + Adicionar produto
                                     </button>
@@ -366,7 +366,7 @@ export function NewEntityPage() {
                                         value={form.frequency}
                                         onChange={(event) => updateForm("frequency", event.target.value)}
                                         placeholder="Diário, semanal, 2x ao dia....."
-                                        className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                        className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                     />
                                 </div>
 
@@ -378,7 +378,7 @@ export function NewEntityPage() {
                                     <div className="mt-2 space-y-2">
                                         {stepsList.map((stepItem, index) => (
                                             <div key={index} className="flex gap-2">
-                                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-700 text-sm font-bold text-white">
+                                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-sm font-bold text-white">
                                                     {index + 1}
                                                 </div>
 
@@ -386,7 +386,7 @@ export function NewEntityPage() {
                                                     value={stepItem}
                                                     onChange={(event) => updateStep(index, event.target.value)}
                                                     placeholder={`Etapa ${index + 1}`}
-                                                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                                 />
 
                                                 <button
@@ -403,7 +403,7 @@ export function NewEntityPage() {
                                     <button
                                         type="button"
                                         onClick={addStep}
-                                        className="mt-2 rounded-xl border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700"
+                                        className="mt-2 rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
                                     >
                                         + Adicionar etapa
                                     </button>
@@ -517,7 +517,7 @@ export function NewEntityPage() {
                             <button
                                 type="button"
                                 onClick={nextStep}
-                                className="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white"
+                                className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white"
                             >
                                 Próximo
                             </button>
@@ -526,7 +526,7 @@ export function NewEntityPage() {
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={saving}
-                                className="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                                className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
                             >
                                 {saving ? "Cadastrando..." : "Cadastrar entidade"}
                             </button>

@@ -29,8 +29,8 @@ export function AdminHeader({ title }: { title: string }) {
         </div>
 
         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100">
-            <User className="h-5 w-5 text-blue-700" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100">
+            <User className="h-5 w-5 text-emerald-700" />
           </div>
 
           <div className="min-w-0">

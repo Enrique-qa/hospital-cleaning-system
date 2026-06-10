@@ -83,7 +83,7 @@ export function QrReportPage() {
       <div className="mx-auto mb-4 flex max-w-5xl items-center justify-between gap-3 print:hidden">
         <Link
           to="/entities"
-          className="text-sm font-semibold text-blue-700"
+          className="text-sm font-semibold text-emerald-700"
         >
           ← Voltar para entidades
         </Link>
@@ -91,7 +91,7 @@ export function QrReportPage() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white"
+          className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
         >
           Imprimir todos
         </button>

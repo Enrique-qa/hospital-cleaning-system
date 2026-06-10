@@ -87,11 +87,11 @@ export function EmployeesPage() {
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-4xl space-y-4">
         <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link to="/" className="text-sm font-semibold text-blue-700">
+          <Link to="/" className="text-sm font-semibold text-emerald-700">
             ← Voltar ao dashboard
           </Link>
 
-          <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-blue-700">
+          <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
             Gestão
           </p>
 
@@ -117,13 +117,13 @@ export function EmployeesPage() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Nome completo"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-base outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             />
 
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
             >
               {saving ? "Cadastrando..." : "Cadastrar"}
             </button>
@@ -164,7 +164,7 @@ export function EmployeesPage() {
               {employees.map((employee) => (
                 <div
                   key={employee.id}
-                  className="grid gap-3 p-4 md:grid-cols-[100px_1fr_auto]"
+                  className="grid gap-3 p-4 md:grid-cols-[100px_1fr_auto] md:items-center"
                 >
                   <div>
                     <p className="text-xs text-slate-500">Código</p>
@@ -188,17 +188,26 @@ export function EmployeesPage() {
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => toggleEmployee(employee)}
-                    className={
-                      employee.active
-                        ? "rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-700"
-                        : "rounded-xl border border-green-200 px-4 py-2 text-sm font-semibold text-green-700"
-                    }
-                  >
-                    {employee.active ? "Inativar" : "Ativar"}
-                  </button>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      to={`/employees/${employee.id}/edit`}
+                      className="rounded-xl border border-emerald-200 px-4 py-2 text-center text-sm font-semibold text-emerald-700"
+                    >
+                      Editar
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => toggleEmployee(employee)}
+                      className={
+                        employee.active
+                          ? "rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-700"
+                          : "rounded-xl border border-green-200 px-4 py-2 text-sm font-semibold text-green-700"
+                      }
+                    >
+                      {employee.active ? "Inativar" : "Ativar"}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

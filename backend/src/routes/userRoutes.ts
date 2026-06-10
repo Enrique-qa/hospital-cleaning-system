@@ -20,4 +20,18 @@ userRoutes.get(
   userController.list
 );
 
+userRoutes.get(
+  "/users/:id",
+  authMiddleware,
+  adminMiddleware,
+  userController.findById
+);
+
+userRoutes.put(
+  "/users/:id",
+  authMiddleware,
+  adminMiddleware,
+  userController.update
+);
+
 export { userRoutes };

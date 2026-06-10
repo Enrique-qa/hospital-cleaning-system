@@ -75,7 +75,7 @@ export function CleaningRecordsReportPage() {
         <main className="min-h-screen bg-slate-100 px-4 py-5">
             <section className="mx-auto max-w-6xl space-y-4">
                 <div className="rounded-2xl bg-white p-5 shadow-sm">
-                    <Link to="/" className="text-sm font-semibold text-blue-700">
+                    <Link to="/" className="text-sm font-semibold text-emerald-700">
                         ← Voltar ao dashboard
                     </Link>
 
@@ -99,7 +99,7 @@ export function CleaningRecordsReportPage() {
                                 type="date"
                                 value={startDate}
                                 onChange={(event) => setStartDate(event.target.value)}
-                                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                             />
                         </div>
 
@@ -112,7 +112,7 @@ export function CleaningRecordsReportPage() {
                                 type="date"
                                 value={endDate}
                                 onChange={(event) => setEndDate(event.target.value)}
-                                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+                                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                             />
                         </div>
 
@@ -121,7 +121,7 @@ export function CleaningRecordsReportPage() {
                                 type="button"
                                 onClick={loadReport}
                                 disabled={loading}
-                                className="w-full rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white disabled:opacity-60"
+                                className="w-full rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white disabled:opacity-60"
                             >
                                 {loading ? "Buscando..." : "Buscar"}
                             </button>
@@ -190,7 +190,7 @@ export function CleaningRecordsReportPage() {
                                                 <div>
                                                     <Link
                                                         to={`/entities/${record.entity.slug}`}
-                                                        className="font-bold text-blue-700"
+                                                        className="font-bold text-emerald-700"
                                                     >
                                                         {record.entity.name}
                                                     </Link>

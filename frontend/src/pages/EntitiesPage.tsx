@@ -68,13 +68,13 @@ export function EntitiesPage() {
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-5xl space-y-4">
         <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <Link to="/" className="text-sm font-semibold text-blue-700">
+          <Link to="/" className="text-sm font-semibold text-emerald-700">
             ← Voltar ao dashboard
           </Link>
 
           <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
                 Gestão
               </p>
 
@@ -90,14 +90,14 @@ export function EntitiesPage() {
             <div className="flex flex-col gap-2 sm:flex-row">
               <Link
                 to="/entities/qr-report"
-                className="rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-semibold text-blue-700"
+                className="rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-semibold text-emerald-700"
               >
                 Relatório de QR Codes
               </Link>
 
               <Link
                 to="/entities/new"
-                className="rounded-xl bg-blue-700 px-4 py-3 text-center text-sm font-semibold text-white"
+                className="rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-semibold text-white"
               >
                 Nova entidade
               </Link>
@@ -121,7 +121,7 @@ export function EntitiesPage() {
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar por nome, setor, tipo..."
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100 md:max-w-xs"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 md:max-w-xs"
             />
           </div>
 
@@ -192,14 +192,14 @@ export function EntitiesPage() {
 
                         <Link
                           to={`/cleaning/${entity.slug}`}
-                          className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white"
+                          className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
                         >
                           Página QR
                         </Link>
 
                         <button
                           type="button"
-                          className="rounded-xl border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700"
+                          className="rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
                         >
                           QR Code
                         </button>

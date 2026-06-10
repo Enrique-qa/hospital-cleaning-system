@@ -20,7 +20,7 @@ export function PublicCleaningPage() {
   const { slug } = useParams();
 
   const [entity, setEntity] = useState<CleaningEntity | null>(null);
-  const [employeeName, setEmployeeName] = useState("");
+  const [employeeIdentifier, setEmployeeIdentifier] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -53,8 +53,8 @@ export function PublicCleaningPage() {
     setError("");
     setSuccess("");
 
-    if (!employeeName.trim()) {
-      setError("Digite seu nome para registrar a limpeza.");
+    if (!employeeIdentifier.trim()) {
+      setError("Digite seu nome ou código para registrar a limpeza.");
       return;
     }
 
@@ -62,11 +62,11 @@ export function PublicCleaningPage() {
       setSaving(true);
 
       await api.post(`/cleaning-records/public/${slug}`, {
-        employeeName,
+        employeeIdentifier,
       });
 
       setSuccess("Limpeza registrada com sucesso.");
-      setEmployeeName("");
+      setEmployeeIdentifier("");
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
@@ -119,7 +119,7 @@ export function PublicCleaningPage() {
     <main className="min-h-screen bg-slate-100 px-4 py-4">
       <section className="mx-auto max-w-md overflow-hidden rounded-2xl bg-white shadow-sm">
         <div className="border-b border-slate-200 px-5 py-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-blue-700">
+          <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
             Registro de limpeza
           </p>
 
@@ -154,7 +154,7 @@ export function PublicCleaningPage() {
           <ol className="mt-3 space-y-3">
             {steps.map((step, index) => (
               <li key={index} className="flex gap-3 text-sm text-slate-700">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xs font-bold text-white">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
                   {index + 1}
                 </span>
                 <span className="leading-relaxed">{step}</span>
@@ -163,15 +163,15 @@ export function PublicCleaningPage() {
           </ol>
 
           {products.length > 0 && (
-            <div className="mt-5 rounded-xl bg-blue-50 p-3">
-              <h2 className="text-sm font-semibold text-blue-950">
+            <div className="mt-5 rounded-xl bg-emerald-50 p-3">
+              <h2 className="text-sm font-semibold text-emerald-950">
                 Produtos utilizados
               </h2>
 
               <ul className="mt-2 space-y-1">
                 {products.map((product, index) => (
-                  <li key={index} className="flex gap-2 text-sm text-blue-900">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-700" />
+                  <li key={index} className="flex gap-2 text-sm text-emerald-900">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-700" />
                     <span>{product}</span>
                   </li>
                 ))}
@@ -182,14 +182,14 @@ export function PublicCleaningPage() {
 
         <form onSubmit={handleSubmit} className="border-t border-slate-200 p-5">
           <label className="text-sm font-medium text-slate-800">
-            Nome da funcionária
+            Nome ou código da funcionária
           </label>
 
           <input
-            value={employeeName}
-            onChange={(event) => setEmployeeName(event.target.value)}
-            placeholder="Digite seu nome completo"
-            className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-base outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+            value={employeeIdentifier}
+            onChange={(event) => setEmployeeIdentifier(event.target.value)}
+            placeholder="Digite seu nome completo ou código"
+            className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-base outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
           />
 
           {error && (
@@ -207,7 +207,7 @@ export function PublicCleaningPage() {
           <button
             type="submit"
             disabled={saving}
-            className="mt-4 w-full rounded-xl bg-blue-700 px-4 py-3 text-base font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-4 w-full rounded-xl bg-emerald-700 px-4 py-3 text-base font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? "Registrando..." : "Registrar limpeza"}
           </button>

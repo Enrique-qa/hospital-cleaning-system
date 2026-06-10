@@ -111,7 +111,7 @@ export function EntityDetailsPage() {
       <section className="mx-auto max-w-5xl space-y-4">
         <Link
           to="/entities"
-          className="inline-flex text-sm font-semibold text-blue-700"
+          className="inline-flex text-sm font-semibold text-emerald-700"
         >
           ← Voltar para entidades
         </Link>
@@ -124,7 +124,7 @@ export function EntityDetailsPage() {
               className="h-56 w-full object-cover"
             />
           ) : (
-            <div className="flex h-40 items-center justify-center bg-blue-50 text-sm font-medium text-blue-800">
+            <div className="flex h-40 items-center justify-center bg-emerald-50 text-sm font-medium text-emerald-800">
               Sem imagem cadastrada
             </div>
           )}
@@ -132,7 +132,7 @@ export function EntityDetailsPage() {
           <div className="p-5">
             <div className="grid gap-6 md:grid-cols-[1fr_260px]">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
                   Página da entidade
                 </p>
 
@@ -177,7 +177,7 @@ export function EntityDetailsPage() {
                 <div className="mt-5">
                   <Link
                     to={`/cleaning/${entity.slug}`}
-                    className="inline-flex rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white"
+                    className="inline-flex rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
                   >
                     Abrir página de limpeza
                   </Link>
@@ -191,7 +191,7 @@ export function EntityDetailsPage() {
 
                   <Link
                     to={`/entities/${entity.slug}/qr-print`}
-                    className="ml-2 inline-flex rounded-xl border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700"
+                    className="ml-2 inline-flex rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
                   >
                     Imprimir etiqueta
                   </Link>
@@ -213,7 +213,7 @@ export function EntityDetailsPage() {
                   <a
                     href={qrCodeUrl}
                     download={`qr-code-${entity.slug}.png`}
-                    className="mt-3 inline-flex rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white"
+                    className="mt-3 inline-flex rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
                   >
                     Baixar PNG
                   </a>
@@ -232,7 +232,7 @@ export function EntityDetailsPage() {
             <ol className="mt-4 space-y-3">
               {steps.map((step, index) => (
                 <li key={index} className="flex gap-3 text-sm text-slate-700">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xs font-bold text-white">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
                     {index + 1}
                   </span>
                   <span>{step}</span>
@@ -255,7 +255,7 @@ export function EntityDetailsPage() {
                 <ul className="mt-3 space-y-2">
                   {products.map((product, index) => (
                     <li key={index} className="flex gap-2 text-sm text-slate-700">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-700" />
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-700" />
                       <span>{product}</span>
                     </li>
                   ))}

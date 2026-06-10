@@ -86,7 +86,7 @@ export function DashboardPage() {
               {data.activeEntities}
             </p>
 
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-blue-700">
+            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-emerald-700">
               Ver entidades
             </p>
           </Link>
@@ -104,7 +104,7 @@ export function DashboardPage() {
               {data.activeEmployees}
             </p>
 
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-blue-700">
+            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-emerald-700">
               Ver funcionárias
             </p>
           </Link>
@@ -145,7 +145,7 @@ export function DashboardPage() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <ClipboardList size={20} className="text-blue-700" />
+                  <ClipboardList size={20} className="text-emerald-700" />
 
                   <h2 className="text-lg font-black text-slate-950">
                     Últimas limpezas
@@ -176,7 +176,7 @@ export function DashboardPage() {
                     >
                       <Link
                         to={`/entities/${record.entity.slug}`}
-                        className="font-bold text-blue-700"
+                        className="font-bold text-emerald-700"
                       >
                         {record.entity.name}
                       </Link>
@@ -230,7 +230,7 @@ export function DashboardPage() {
                     >
                       <Link
                         to={`/entities/${entity.slug}`}
-                        className="font-bold text-blue-700"
+                        className="font-bold text-emerald-700"
                       >
                         {entity.name}
                       </Link>
@@ -262,7 +262,7 @@ export function DashboardPage() {
           <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               to="/entities"
-              className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
             >
               <Building2 size={18} />
               Entidades
@@ -270,7 +270,7 @@ export function DashboardPage() {
 
             <Link
               to="/employees"
-              className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
             >
               <Users size={18} />
               Funcionários
@@ -278,7 +278,7 @@ export function DashboardPage() {
 
             <Link
               to="/entities/qr-report"
-              className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
             >
               <QrCode size={18} />
               QR Codes
@@ -286,7 +286,7 @@ export function DashboardPage() {
 
             <Link
               to="/reports/cleaning-records"
-              className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
             >
               <MessageSquareWarning size={18} />
               Relatórios
@@ -295,7 +295,7 @@ export function DashboardPage() {
             {user?.role === "ADMIN" && (
               <Link
                 to="/users"
-                className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+                className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
               >
                 <UserCog size={18} />
                 Usuários
@@ -304,7 +304,7 @@ export function DashboardPage() {
 
             <Link
               to="/entities/new"
-              className="flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-blue-800"
+              className="flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-emerald-800"
             >
               <Plus size={18} />
               Nova entidade

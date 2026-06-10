@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
 
@@ -75,6 +76,10 @@ export function UsersPage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6">
       <section className="mx-auto max-w-6xl space-y-5">
+        <Link to="/" className="inline-flex text-sm font-semibold text-emerald-700">
+          ← Voltar ao dashboard
+        </Link>
+
         <AdminHeader title="Usuários" />
 
         <form
@@ -94,14 +99,14 @@ export function UsersPage() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Nome completo"
-              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             />
 
             <input
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder="Usuário"
-              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             />
 
             <input
@@ -109,7 +114,7 @@ export function UsersPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Senha"
-              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             />
 
             <select
@@ -117,7 +122,7 @@ export function UsersPage() {
               onChange={(event) =>
                 setRole(event.target.value as "ADMIN" | "MANAGER")
               }
-              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             >
               <option value="MANAGER">Manager</option>
               <option value="ADMIN">Admin</option>
@@ -139,7 +144,7 @@ export function UsersPage() {
           <button
             type="submit"
             disabled={saving}
-            className="mt-4 rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white disabled:opacity-60"
+            className="mt-4 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white disabled:opacity-60"
           >
             {saving ? "Cadastrando..." : "Cadastrar usuário"}
           </button>
@@ -168,7 +173,7 @@ export function UsersPage() {
                 {users.map((user) => (
                   <div
                     key={user.id}
-                    className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_1fr_120px_100px]"
+                    className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_1fr_120px_100px_auto] md:items-center"
                   >
                     <div>
                       <p className="font-bold text-slate-950">
@@ -188,7 +193,7 @@ export function UsersPage() {
                       </p>
                     </div>
 
-                    <span className="rounded-full bg-blue-50 px-3 py-1 text-center text-xs font-bold text-blue-700">
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-center text-xs font-bold text-emerald-700">
                       {user.role}
                     </span>
 
@@ -201,6 +206,13 @@ export function UsersPage() {
                     >
                       {user.active ? "Ativo" : "Inativo"}
                     </span>
+
+                    <Link
+                      to={`/users/${user.id}/edit`}
+                      className="rounded-xl border border-emerald-200 px-4 py-2 text-center text-sm font-semibold text-emerald-700"
+                    >
+                      Editar
+                    </Link>
                   </div>
                 ))}
               </div>

@@ -43,11 +43,12 @@ export class CleaningRecordController {
   
   async createPublicRecord(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params;
-    const { employeeName, observation } = req.body;
+    const { employeeIdentifier, employeeName, observation } = req.body;
+    const typedIdentifier = String(employeeIdentifier ?? employeeName ?? "").trim();
 
-    if (!employeeName || String(employeeName).trim() === "") {
+    if (!typedIdentifier) {
       return res.status(400).json({
-        message: "Informe o nome da funcionária.",
+        message: "Informe o nome ou código da funcionária.",
       });
     }
 
@@ -67,10 +68,12 @@ export class CleaningRecordController {
       },
     });
 
-    const normalizedTypedName = normalizeName(String(employeeName));
+    const normalizedTypedName = normalizeName(typedIdentifier);
 
     const employee = employees.find(
-      (item) => normalizeName(item.name) === normalizedTypedName
+      (item) =>
+        item.employeeCode === typedIdentifier ||
+        normalizeName(item.name) === normalizedTypedName
     );
 
     if (!employee) {
@@ -105,7 +108,7 @@ export class CleaningRecordController {
       data: {
         entityId: entity.id,
         employeeId: employee.id,
-        employeeNameTyped: String(employeeName).trim(),
+        employeeNameTyped: typedIdentifier,
         observation: observation ? String(observation).trim() : null,
       },
       include: {

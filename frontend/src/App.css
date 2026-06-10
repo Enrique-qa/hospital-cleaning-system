@@ -3,16 +3,16 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #eef5fb;
+  background: #ecfdf5;
 }
 
 .welcome-card {
   width: min(100%, 520px);
   background: #ffffff;
-  border: 1px solid #d8e6f2;
+  border: 1px solid #a7f3d0;
   border-radius: 22px;
   padding: 28px;
-  box-shadow: 0 18px 60px rgba(15, 65, 106, 0.12);
+  box-shadow: 0 18px 60px rgba(6, 78, 59, 0.12);
 }
 
 .hospital-logo {
@@ -34,14 +34,14 @@
 
 h1 {
   margin: 0;
-  color: #12324a;
+  color: #064e3b;
   font-size: clamp(28px, 7vw, 42px);
   line-height: 1.05;
 }
 
 p {
   margin: 16px 0 0;
-  color: #50687a;
+  color: #4b635a;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -50,14 +50,14 @@ p {
   margin-top: 28px;
   border-radius: 16px;
   padding: 16px;
-  background: #f4f9fd;
-  border: 1px solid #d8e6f2;
-  color: #12324a;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #064e3b;
   display: grid;
   gap: 4px;
 }
 
 .status-box span {
-  color: #587084;
+  color: #526b61;
   font-size: 14px;
 }

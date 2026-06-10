@@ -13,6 +13,8 @@ import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UsersPage } from "./pages/UsersPage";
 import { AdminRoute } from "./components/AdminRoute";
+import { EditUserPage } from "./pages/EditUserPage";
+import { EditEmployeePage } from "./pages/EditEmployeePage";
 
 function App() {
   return (
@@ -95,6 +97,15 @@ function App() {
         />
 
         <Route
+          path="/employees/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditEmployeePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/reports/cleaning-records"
           element={
             <ProtectedRoute>
@@ -106,9 +117,22 @@ function App() {
         <Route
           path="/users"
           element={
-            <AdminRoute>
-              <UsersPage />
-            </AdminRoute>
+            <ProtectedRoute>
+              <AdminRoute>
+                <UsersPage />
+              </AdminRoute>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/users/:id/edit"
+          element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <EditUserPage />
+              </AdminRoute>
+            </ProtectedRoute>
           }
         />
       </Routes>
