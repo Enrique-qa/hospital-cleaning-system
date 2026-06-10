@@ -10,6 +10,7 @@ import path from "path";
 import { reportRoutes } from "./routes/reportRoutes";
 import { userRoutes } from "./routes/userRoutes";
 import { authRoutes } from "./routes/authRoutes";
+import { authMiddleware } from "./middlewares/authMiddleware";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(reportRoutes);
 app.use(userRoutes);
 app.use(authRoutes);
 
-app.get("/", (req, res) => {
+app.get("/", authMiddleware, (req, res) => {
   return res.json({
     message: "API de Limpeza Hospitalar funcionando",
   });

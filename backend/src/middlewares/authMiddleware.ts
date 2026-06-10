@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { prisma } from "../lib/prisma";
 
 type JwtPayload = {
   id: number;
@@ -14,7 +15,7 @@ declare global {
   }
 }
 
-export function authMiddleware(
+export async function authMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
@@ -35,21 +36,40 @@ export function authMiddleware(
     });
   }
 
+  let decoded: JwtPayload;
+
   try {
-    const decoded = jwt.verify(
+    decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "default_secret"
     ) as JwtPayload;
-
-    req.user = {
-      id: decoded.id,
-      role: decoded.role,
-    };
-
-    return next();
   } catch {
     return res.status(401).json({
       message: "Token inválido ou expirado.",
     });
   }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: decoded.id,
+    },
+    select: {
+      id: true,
+      role: true,
+      active: true,
+    },
+  });
+
+  if (!user || !user.active) {
+    return res.status(401).json({
+      message: "Usuário não encontrado ou inativo.",
+    });
+  }
+
+  req.user = {
+    id: user.id,
+    role: user.role,
+  };
+
+  return next();
 }

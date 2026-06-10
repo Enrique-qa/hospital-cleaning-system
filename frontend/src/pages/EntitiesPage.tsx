@@ -196,13 +196,6 @@ export function EntitiesPage() {
                         >
                           Página QR
                         </Link>
-
-                        <button
-                          type="button"
-                          className="rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700"
-                        >
-                          QR Code
-                        </button>
                       </div>
 
                       <div className="w-full rounded-xl bg-slate-50 px-4 py-3 text-sm md:min-w-56">

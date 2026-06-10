@@ -44,7 +44,9 @@ export class CleaningRecordController {
   async createPublicRecord(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params;
     const { employeeIdentifier, employeeName, observation } = req.body;
-    const typedIdentifier = String(employeeIdentifier ?? employeeName ?? "").trim();
+    const typedIdentifier = String(
+      employeeIdentifier ?? employeeName ?? ""
+    ).trim();
 
     if (!typedIdentifier) {
       return res.status(400).json({

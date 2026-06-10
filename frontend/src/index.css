@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+body {
+  min-width: 320px;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+.rounded-2xl.bg-white.shadow-sm {
+  border: 1px solid rgb(226 232 240 / 75%);
+}
+
+:focus-visible {
+  outline: 3px solid rgb(16 185 129 / 20%);
+  outline-offset: 2px;
+}
+
+button.bg-emerald-700:hover:not(:disabled),
+a.bg-emerald-700:hover {
+  background-color: #065f46;
+}
+
+button.bg-emerald-700,
+a.bg-emerald-700 {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 10%);
+}
+
+button.border-emerald-200:hover,
+a.border-emerald-200:hover {
+  border-color: #6ee7b7;
+  background-color: #ecfdf5;
+}
+
+button.border-slate-300:hover,
+a.border-slate-300:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+button.border-red-200:hover {
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+}
+
+button.border-green-200:hover {
+  border-color: #86efac;
+  background-color: #f0fdf4;
+}
+
+a.text-emerald-700:hover,
+button.text-emerald-700:hover {
+  color: #065f46;
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { api } from "../services/api";
 
@@ -26,8 +27,20 @@ type ReportData = {
     records: CleaningRecord[];
 };
 
+function getErrorMessage(error: unknown, fallback: string) {
+    return (
+        (error as AxiosError<{ message?: string }>).response?.data?.message ||
+        fallback
+    );
+}
+
 function getTodayDate() {
-    return new Date().toISOString().slice(0, 10);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
 }
 
 export function CleaningRecordsReportPage() {
@@ -35,7 +48,7 @@ export function CleaningRecordsReportPage() {
     const [endDate, setEndDate] = useState(getTodayDate());
 
     const [data, setData] = useState<ReportData | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     async function loadReport() {
@@ -43,14 +56,16 @@ export function CleaningRecordsReportPage() {
             setLoading(true);
             setError("");
 
-            const start = new Date(startDate);
-            const end = new Date(endDate);
+            if (!startDate || !endDate) {
+                setError("Informe a data inicial e a data final.");
+                return;
+            }
 
-            if (start > end) {
+            if (startDate > endDate) {
                 setError("A data inicial não pode ser maior que a data final.");
                 return;
             }
-            const response = await api.get("/reports/cleaning-records", {
+            const response = await api.get<ReportData>("/reports/cleaning-records", {
                 params: {
                     startDate,
                     endDate,
@@ -58,17 +73,31 @@ export function CleaningRecordsReportPage() {
             });
 
             setData(response.data);
-        } catch (error: any) {
-            const message =
-                error.response?.data?.message || "Não foi possível carregar o relatório.";
-            setError(message);
+        } catch (error) {
+            setError(
+                getErrorMessage(error, "Não foi possível carregar o relatório.")
+            );
         } finally {
             setLoading(false);
         }
     }
 
     useEffect(() => {
-        loadReport();
+        const today = getTodayDate();
+
+        api.get<ReportData>("/reports/cleaning-records", {
+            params: {
+                startDate: today,
+                endDate: today,
+            },
+        })
+            .then((response) => setData(response.data))
+            .catch((error) =>
+                setError(
+                    getErrorMessage(error, "Não foi possível carregar o relatório.")
+                )
+            )
+            .finally(() => setLoading(false));
     }, []);
 
     return (
@@ -97,6 +126,7 @@ export function CleaningRecordsReportPage() {
 
                             <input
                                 type="date"
+                                required
                                 value={startDate}
                                 onChange={(event) => setStartDate(event.target.value)}
                                 className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
@@ -110,6 +140,7 @@ export function CleaningRecordsReportPage() {
 
                             <input
                                 type="date"
+                                required
                                 value={endDate}
                                 onChange={(event) => setEndDate(event.target.value)}
                                 className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"

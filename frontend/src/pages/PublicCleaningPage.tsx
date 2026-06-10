@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import type { AxiosError } from "axios";
 import { useParams } from "react-router-dom";
-import { api } from "../services/api";
+import { API_BASE_URL, api } from "../services/api";
 
 type CleaningEntity = {
   id: number;
@@ -9,12 +10,20 @@ type CleaningEntity = {
   type: string;
   sector?: string | null;
   location?: string | null;
+  imageUrl?: string | null;
   description?: string | null;
   cleaningSteps: string;
   products?: string | null;
   frequency?: string | null;
   active: boolean;
 };
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return (
+    (error as AxiosError<{ message?: string }>).response?.data?.message ||
+    fallback
+  );
+}
 
 export function PublicCleaningPage() {
   const { slug } = useParams();
@@ -67,12 +76,10 @@ export function PublicCleaningPage() {
 
       setSuccess("Limpeza registrada com sucesso.");
       setEmployeeIdentifier("");
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message ||
-        "Não foi possível registrar a limpeza.";
-
-      setError(message);
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "Não foi possível registrar a limpeza.")
+      );
     } finally {
       setSaving(false);
     }
@@ -115,9 +122,23 @@ export function PublicCleaningPage() {
       .filter(Boolean)
     : [];
 
+  const imageSrc = entity.imageUrl
+    ? entity.imageUrl.startsWith("http")
+      ? entity.imageUrl
+      : `${API_BASE_URL}${entity.imageUrl}`
+    : "";
+
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-4">
       <section className="mx-auto max-w-md overflow-hidden rounded-2xl bg-white shadow-sm">
+        {imageSrc && (
+          <img
+            src={imageSrc}
+            alt={entity.name}
+            className="h-48 w-full object-cover sm:h-56"
+          />
+        )}
+
         <div className="border-b border-slate-200 px-5 py-4">
           <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
             Registro de limpeza
@@ -211,13 +232,6 @@ export function PublicCleaningPage() {
           >
             {saving ? "Registrando..." : "Registrar limpeza"}
           </button>
-
-          <a
-            href={`/entities/${entity.slug}`}
-            className="mt-4 block text-center text-sm font-medium text-slate-500 underline"
-          >
-            Ver registros da entidade
-          </a>
         </form>
       </section>
     </main>

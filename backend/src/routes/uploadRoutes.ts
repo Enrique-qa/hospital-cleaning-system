@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path";
 import { UploadController } from "../controllers/uploadController";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const uploadRoutes = Router();
 const uploadController = new UploadController();
@@ -45,6 +46,7 @@ const upload = multer({
 
 uploadRoutes.post(
   "/uploads/entities",
+  authMiddleware,
   upload.single("image"),
   uploadController.uploadEntityImage
 );
