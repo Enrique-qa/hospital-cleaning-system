@@ -12,6 +12,9 @@ import {
   Users,
 } from "lucide-react";
 import { api } from "../services/api";
+import { AdminHeader } from "../components/AdminHeader";
+import { useAuth } from "../contexts/AuthContext";
+import { UserCog } from "lucide-react";
 
 type DashboardData = {
   activeEntities: number;
@@ -41,6 +44,7 @@ type DashboardData = {
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     async function loadDashboard() {
@@ -62,24 +66,11 @@ export function DashboardPage() {
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-6">
       <section className="mx-auto max-w-6xl space-y-5">
-        <header className="text-center">
-          <p className="text-base font-extrabold uppercase tracking-[0.18em] text-blue-700">
-            Hospital São Lucas
-          </p>
+        <AdminHeader title="Dashboard" />
 
-          <p className="mt-2 text-sm font-medium text-slate-500">
-            Controle de Higienização
-          </p>
-
-          <h1 className="mt-6 text-3xl font-black text-slate-950">
-            Dashboard
-          </h1>
-
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
-            Acompanhe os registros de limpeza, entidades pendentes e atalhos
-            principais do sistema.
-          </p>
-        </header>
+        <p className="mx-auto max-w-2xl text-center text-md leading-relaxed text-slate-600">
+          Acompanhe os registros de limpeza, entidades pendentes e atalhos principais do sistema.
+        </p>
 
         <div className="grid gap-3 md:grid-cols-4">
           <Link
@@ -297,9 +288,19 @@ export function DashboardPage() {
               to="/reports/cleaning-records"
               className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
             >
-              <MessageSquareWarning size={18}/>
+              <MessageSquareWarning size={18} />
               Relatórios
             </Link>
+
+            {user?.role === "ADMIN" && (
+              <Link
+                to="/users"
+                className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+              >
+                <UserCog size={18} />
+                Usuários
+              </Link>
+            )}
 
             <Link
               to="/entities/new"
