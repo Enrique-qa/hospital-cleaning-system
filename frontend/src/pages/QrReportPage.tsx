@@ -79,8 +79,8 @@ export function QrReportPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 p-6 print:bg-white print:p-0">
-      <div className="mx-auto mb-4 flex max-w-5xl items-center justify-between gap-3 print:hidden">
+    <main className="min-h-screen overflow-x-hidden bg-slate-100 p-3 sm:p-6 print:overflow-visible print:bg-white print:p-0">
+      <div className="mx-auto mb-4 flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
         <Link
           to="/entities"
           className="text-sm font-semibold text-emerald-700"
@@ -91,17 +91,17 @@ export function QrReportPage() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
+          className="w-full rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white sm:w-auto"
         >
           Imprimir todos
         </button>
       </div>
 
-      <section className="mx-auto flex max-w-5xl flex-wrap gap-4 print:max-w-none print:gap-0">
+      <section className="mx-auto flex w-full max-w-5xl flex-wrap justify-center gap-4 print:max-w-none print:justify-start print:gap-0">
         {qrEntities.map((entity) => (
           <article
             key={entity.id}
-            className="flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-black bg-white p-[0.35cm] text-center print:break-inside-avoid"
+            className="flex h-[7cm] w-[10cm] max-w-full flex-col justify-between border-2 border-black bg-white p-[0.35cm] text-center print:max-w-none print:break-inside-avoid"
           >
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wide text-blue-700">

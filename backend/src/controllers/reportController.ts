@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { getActiveEntitiesMonitoring } from "../utils/cleaningMonitoringData";
 
 function parseLocalDate(value: unknown, endOfDay = false) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
@@ -68,7 +69,7 @@ export class ReportController {
       !Number.isInteger(normalizedEmployeeId)
     ) {
       return res.status(400).json({
-        message: "Funcionária inválida.",
+        message: "Funcionário inválido.",
       });
     }
 
@@ -106,6 +107,24 @@ export class ReportController {
       entityId: normalizedEntityId ?? null,
       total: records.length,
       records,
+    });
+  }
+
+  async monitoring(req: Request, res: Response) {
+    const now = new Date();
+    const entities = await getActiveEntitiesMonitoring(now);
+    const statuses = entities.map(({ entity, monitoringStatus }) => ({
+      ...entity,
+      monitoringStatus,
+    }));
+
+    return res.json({
+      issuedAt: now,
+      total: statuses.length,
+      pendingCount: statuses.filter(
+        (entity) => entity.monitoringStatus.status === "PENDING"
+      ).length,
+      entities: statuses,
     });
   }
 }

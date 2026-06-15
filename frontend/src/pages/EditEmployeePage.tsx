@@ -36,7 +36,7 @@ export function EditEmployeePage() {
         setError(
           getErrorMessage(
             error,
-            "Não foi possível carregar a funcionária."
+            "Não foi possível carregar o funcionário."
           )
         );
       } finally {
@@ -53,7 +53,7 @@ export function EditEmployeePage() {
     if (!employee) return;
 
     if (!employee.name.trim()) {
-      setError("Informe o nome da funcionária.");
+      setError("Informe o nome do funcionário.");
       return;
     }
 
@@ -79,7 +79,7 @@ export function EditEmployeePage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-slate-100 px-4 py-5">
-        <p className="text-sm text-slate-600">Carregando funcionária...</p>
+        <p className="text-sm text-slate-600">Carregando funcionário...</p>
       </main>
     );
   }
@@ -88,10 +88,10 @@ export function EditEmployeePage() {
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-3xl space-y-4">
         <AdminHeader
-          title="Editar funcionária"
+          title="Editar funcionário"
           description="Atualize o nome e o status sem alterar o código de identificação."
           backTo="/employees"
-          backLabel="Voltar para funcionárias"
+          backLabel="Voltar para funcionários"
         />
 
         {employee ? (
@@ -172,7 +172,7 @@ export function EditEmployeePage() {
           </form>
         ) : (
           <p className="rounded-2xl bg-white p-5 text-sm text-red-700 shadow-sm">
-            {error || "Funcionária não encontrada."}
+            {error || "Funcionário não encontrado."}
           </p>
         )}
       </section>

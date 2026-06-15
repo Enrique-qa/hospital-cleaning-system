@@ -2,8 +2,16 @@ import type { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
+import { MonitoringFields } from "../components/MonitoringFields";
 import { API_BASE_URL, api } from "../services/api";
 import { uploadEntityImage } from "../services/uploadEntityImage";
+import {
+  getMonitoringPayload,
+  INITIAL_MONITORING,
+  validateMonitoring,
+  type CleaningFrequencyType,
+  type MonitoringFormValue,
+} from "../types/monitoring";
 
 type CleaningEntity = {
   id: number;
@@ -18,6 +26,13 @@ type CleaningEntity = {
   products?: string | null;
   frequency?: string | null;
   active: boolean;
+  monitoringEnabled: boolean;
+  frequencyType: CleaningFrequencyType;
+  expectedCleaningsPerDay?: number | null;
+  weeklyDays?: string[] | null;
+  monthlyDays?: number[] | null;
+  customIntervalHours?: number | null;
+  monitoringNotes?: string | null;
 };
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -32,6 +47,8 @@ export function EditEntityPage() {
   const navigate = useNavigate();
 
   const [entity, setEntity] = useState<CleaningEntity | null>(null);
+  const [monitoring, setMonitoring] =
+    useState<MonitoringFormValue>(INITIAL_MONITORING);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -62,7 +79,25 @@ export function EditEntityPage() {
     async function loadEntity() {
       try {
         const response = await api.get(`/cleaning-entities/slug/${slug}`);
-        setEntity(response.data);
+        const loadedEntity = response.data as CleaningEntity;
+        setEntity(loadedEntity);
+        setMonitoring({
+          monitoringEnabled: loadedEntity.monitoringEnabled,
+          frequencyType: loadedEntity.frequencyType,
+          expectedCleaningsPerDay: String(
+            loadedEntity.expectedCleaningsPerDay ?? 1
+          ),
+          weeklyDays: Array.isArray(loadedEntity.weeklyDays)
+            ? loadedEntity.weeklyDays
+            : [],
+          monthlyDays: Array.isArray(loadedEntity.monthlyDays)
+            ? loadedEntity.monthlyDays.join(", ")
+            : "",
+          customIntervalHours: loadedEntity.customIntervalHours
+            ? String(loadedEntity.customIntervalHours)
+            : "",
+          monitoringNotes: loadedEntity.monitoringNotes ?? "",
+        });
       } catch {
         setError("Não foi possível carregar a entidade.");
       } finally {
@@ -119,6 +154,13 @@ export function EditEntityPage() {
       return;
     }
 
+    const monitoringError = validateMonitoring(monitoring);
+
+    if (monitoringError) {
+      setError(monitoringError);
+      return;
+    }
+
     try {
       setSaving(true);
       setError("");
@@ -134,6 +176,7 @@ export function EditEntityPage() {
         frequency: entity.frequency || null,
         cleaningSteps: entity.cleaningSteps,
         active: entity.active,
+        ...getMonitoringPayload(monitoring),
       });
 
       navigate(`/entities/${entity.slug}`, { replace: true });
@@ -333,7 +376,7 @@ export function EditEntityPage() {
 
             <div>
               <label className="text-sm font-semibold text-slate-800">
-                Frequência
+                Frequência descrita no POP
               </label>
 
               <textarea
@@ -345,6 +388,10 @@ export function EditEntityPage() {
                 placeholder="Ex: Após cada atendimento"
                 className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
+            </div>
+
+            <div className="md:col-span-2">
+              <MonitoringFields value={monitoring} onChange={setMonitoring} />
             </div>
 
             <div className="md:col-span-2">

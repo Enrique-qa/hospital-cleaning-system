@@ -5,41 +5,44 @@ import {
   Building2,
   Check,
   ClipboardList,
-  MessageSquareWarning,
+  FileText,
   Plus,
   QrCode,
   RefreshCw,
-  Sparkles,
+  UserCog,
   Users,
 } from "lucide-react";
-import { api } from "../services/api";
 import { AdminHeader } from "../components/AdminHeader";
 import { useAuth } from "../contexts/AuthContext";
-import { UserCog } from "lucide-react";
+import { api } from "../services/api";
+
+type PendingEntity = {
+  id: number;
+  name: string;
+  slug: string;
+  type: string;
+  sector?: string | null;
+  location?: string | null;
+  reason: string;
+};
 
 type DashboardData = {
   activeEntities: number;
   activeEmployees: number;
   cleaningsToday: number;
-  entitiesWithoutCleaningToday: number;
+  monitoredEntities: number;
+  pendingEntitiesCount: number;
+  pendingEntities: PendingEntity[];
+  monitoringSummary: {
+    ok: number;
+    pending: number;
+    notMonitored: number;
+  };
   latestRecords: {
     id: number;
     cleanedAt: string;
-    employee: {
-      name: string;
-    };
-    entity: {
-      name: string;
-      slug: string;
-    };
-  }[];
-  entitiesPendingToday: {
-    id: number;
-    name: string;
-    slug: string;
-    type: string;
-    sector?: string | null;
-    location?: string | null;
+    employee: { name: string };
+    entity: { name: string; slug: string };
   }[];
 };
 
@@ -52,7 +55,7 @@ export function DashboardPage() {
     if (showRefreshing) setRefreshing(true);
 
     try {
-      const response = await api.get("/dashboard");
+      const response = await api.get<DashboardData>("/dashboard");
       setData(response.data);
     } finally {
       if (showRefreshing) setRefreshing(false);
@@ -74,15 +77,15 @@ export function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-6">
-      <section className="mx-auto max-w-6xl space-y-5">
+    <main className="min-h-screen bg-slate-100 px-3 py-4 sm:px-4 sm:py-6">
+      <section className="mx-auto max-w-6xl space-y-4 sm:space-y-5">
         <AdminHeader title="Dashboard" />
 
         <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
-          <p className="max-w-2xl text-center text-md leading-relaxed text-slate-600 md:text-left">
-            Acompanhe os registros de limpeza, entidades pendentes e atalhos principais do sistema.
+          <p className="max-w-2xl text-center text-sm leading-relaxed text-slate-600 md:text-left">
+            Acompanhe a rotina configurada, pendências reais e os registros mais
+            recentes.
           </p>
-
           <button
             type="button"
             onClick={() => loadDashboard(true)}
@@ -94,239 +97,145 @@ export function DashboardPage() {
           </button>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-4">
-          <Link
-            to="/entities"
-            className="rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <div className="flex items-center gap-2 text-slate-500">
-              <Building2 size={18} />
-              <p className="text-sm font-medium">Entidades ativas</p>
-            </div>
-
-            <p className="mt-3 text-4xl font-black text-slate-950">
-              {data.activeEntities}
-            </p>
-
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-emerald-700">
-              Ver entidades
-            </p>
-          </Link>
-
-          <Link
-            to="/employees"
-            className="rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <div className="flex items-center gap-2 text-slate-500">
-              <Users size={18} />
-              <p className="text-sm font-medium">Funcionárias ativas</p>
-            </div>
-
-            <p className="mt-3 text-4xl font-black text-slate-950">
-              {data.activeEmployees}
-            </p>
-
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-emerald-700">
-              Ver funcionárias
-            </p>
-          </Link>
-
-          <div className="rounded-2xl bg-green-600 p-5 text-white shadow-sm">
-            <div className="flex items-center gap-2 text-green-50">
-              <Check size={18} />
-              <p className="text-sm font-medium">Limpezas hoje</p>
-            </div>
-
-            <p className="mt-3 text-4xl font-black">
-              {data.cleaningsToday}
-            </p>
-
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-green-50">
-              Registros do dia
-            </p>
-          </div>
-
-          <div className="rounded-2xl bg-red-800 p-5 text-white shadow-sm">
-            <div className="flex items-center gap-2 text-red-50">
-              <AlertTriangle size={18} />
-              <p className="text-sm font-medium">Sem limpeza hoje</p>
-            </div>
-
-            <p className="mt-3 text-4xl font-black">
-              {data.entitiesWithoutCleaningToday}
-            </p>
-
-            <p className="mt-3 text-xs font-bold uppercase tracking-wide text-red-50">
-              Pendências do dia
-            </p>
-          </div>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-5 [&>*:last-child]:col-span-2 xl:[&>*:last-child]:col-span-1">
+          <MetricCard
+            label="Entidades ativas"
+            value={data.activeEntities}
+            detail="Operação cadastrada"
+            icon={<Building2 size={18} />}
+          />
+          <MetricCard
+            label="Funcionários ativos"
+            value={data.activeEmployees}
+            detail="Equipe disponível"
+            icon={<Users size={18} />}
+          />
+          <MetricCard
+            label="Limpezas hoje"
+            value={data.cleaningsToday}
+            detail="Registros do dia"
+            icon={<Check size={18} />}
+            tone="success"
+          />
+          <MetricCard
+            label="Monitoradas"
+            value={data.monitoredEntities}
+            detail={`${data.monitoringSummary.ok} dentro da rotina`}
+            icon={<ClipboardList size={18} />}
+          />
+          <MetricCard
+            label="Fora da rotina"
+            value={data.pendingEntitiesCount}
+            detail="Pendências reais"
+            icon={<AlertTriangle size={18} />}
+            tone={data.pendingEntitiesCount > 0 ? "danger" : "success"}
+          />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-2xl bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+          <section className="rounded-2xl bg-white p-5 shadow-sm">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <div className="flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-lg font-black text-slate-950">
                   <ClipboardList size={20} className="text-emerald-700" />
-
-                  <h2 className="text-lg font-black text-slate-950">
-                    Últimas limpezas
-                  </h2>
-                </div>
-
+                  Últimas limpezas
+                </h2>
                 <p className="mt-1 text-sm text-slate-500">
                   Registros mais recentes do sistema.
                 </p>
               </div>
-
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                 {data.latestRecords.length} registros
               </span>
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
+            <div className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
               {data.latestRecords.length === 0 ? (
                 <p className="p-4 text-sm text-slate-600">
                   Nenhum registro encontrado.
                 </p>
               ) : (
-                <div className="divide-y divide-slate-200">
-                  {data.latestRecords.map((record) => (
-                    <div
-                      key={record.id}
-                      className="grid gap-1 p-4 text-sm transition hover:bg-slate-50 md:grid-cols-[1fr_1fr_auto]"
+                data.latestRecords.map((record) => (
+                  <div
+                    key={record.id}
+                    className="grid gap-1 p-4 text-sm md:grid-cols-[1fr_1fr_auto]"
+                  >
+                    <Link
+                      to={`/entities/${record.entity.slug}`}
+                      className="font-bold text-emerald-700"
                     >
-                      <Link
-                        to={`/entities/${record.entity.slug}`}
-                        className="font-bold text-emerald-700"
-                      >
-                        {record.entity.name}
-                      </Link>
-
-                      <span className="text-slate-700">
-                        {record.employee.name}
-                      </span>
-
-                      <span className="text-slate-600 md:text-right">
-                        {new Date(record.cleanedAt).toLocaleString("pt-BR")}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                      {record.entity.name}
+                    </Link>
+                    <span className="text-slate-700">{record.employee.name}</span>
+                    <span className="text-slate-600 md:text-right">
+                      {new Date(record.cleanedAt).toLocaleString("pt-BR")}
+                    </span>
+                  </div>
+                ))
               )}
             </div>
-          </div>
+          </section>
 
-          <div className="rounded-2xl bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+          <section className="rounded-2xl bg-white p-5 shadow-sm">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <div className="flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-lg font-black text-slate-950">
                   <AlertTriangle size={20} className="text-red-600" />
-
-                  <h2 className="text-lg font-black text-slate-950">
-                    Pendentes hoje
-                  </h2>
-                </div>
-
+                  Entidades fora da rotina
+                </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Entidades ativas sem registro de limpeza hoje.
+                  Apenas rotinas que exigem limpeza neste momento.
                 </p>
               </div>
-
               <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">
-                {data.entitiesPendingToday.length} pendentes
+                {data.pendingEntities.length} pendentes
               </span>
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
-              {data.entitiesPendingToday.length === 0 ? (
+            <div className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
+              {data.pendingEntities.length === 0 ? (
                 <p className="p-4 text-sm font-medium text-green-700">
-                  Todas as entidades ativas possuem limpeza registrada hoje.
+                  Nenhuma entidade está fora da rotina configurada.
                 </p>
               ) : (
-                <div className="divide-y divide-slate-200">
-                  {data.entitiesPendingToday.map((entity) => (
-                    <div
-                      key={entity.id}
-                      className="p-4 text-sm transition hover:bg-slate-50"
+                data.pendingEntities.map((entity) => (
+                  <div key={entity.id} className="p-4 text-sm">
+                    <Link
+                      to={`/entities/${entity.slug}`}
+                      className="font-bold text-emerald-700"
                     >
-                      <Link
-                        to={`/entities/${entity.slug}`}
-                        className="font-bold text-emerald-700"
-                      >
-                        {entity.name}
-                      </Link>
-
-                      <p className="mt-1 text-xs text-slate-600">
-                        {entity.type === "AMBIENTE"
-                          ? "Ambiente"
-                          : "Equipamento"}
-                        {entity.sector ? ` • ${entity.sector}` : ""}
-                        {entity.location ? ` • ${entity.location}` : ""}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                      {entity.name}
+                    </Link>
+                    <p className="mt-1 text-xs text-slate-600">
+                      {entity.type === "AMBIENTE" ? "Ambiente" : "Equipamento"}
+                      {entity.sector ? ` • ${entity.sector}` : ""}
+                      {entity.location ? ` • ${entity.location}` : ""}
+                    </p>
+                    <p className="mt-2 text-xs font-semibold text-red-700">
+                      {entity.reason}
+                    </p>
+                  </div>
+                ))
               )}
             </div>
-          </div>
+          </section>
         </div>
 
         <nav className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-center gap-2 text-slate-500">
-            <Sparkles size={16} />
-
-            <p className="text-center text-sm font-semibold">
-              Acessos rápidos
-            </p>
-          </div>
-
-          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            <Link
-              to="/entities"
-              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
-            >
-              <Building2 size={18} />
-              Entidades
-            </Link>
-
-            <Link
-              to="/employees"
-              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
-            >
-              <Users size={18} />
-              Funcionários
-            </Link>
-
-            <Link
-              to="/entities/qr-report"
-              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
-            >
-              <QrCode size={18} />
-              QR Codes
-            </Link>
-
-            <Link
-              to="/reports"
-              className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
-            >
-              <MessageSquareWarning size={18} />
-              Relatórios
-            </Link>
-
+          <p className="text-center text-sm font-semibold text-slate-500">
+            Acessos rápidos
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+            <QuickLink to="/entities" label="Entidades" icon={<Building2 size={18} />} />
+            <QuickLink to="/employees" label="Funcionários" icon={<Users size={18} />} />
+            <QuickLink to="/entities/qr-report" label="QR Codes" icon={<QrCode size={18} />} />
+            <QuickLink to="/reports" label="Relatórios" icon={<FileText size={18} />} />
             {user?.role === "ADMIN" && (
-              <Link
-                to="/users"
-                className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
-              >
-                <UserCog size={18} />
-                Usuários
-              </Link>
+              <QuickLink to="/users" label="Usuários" icon={<UserCog size={18} />} />
             )}
-
             <Link
               to="/entities/new"
-              className="flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-emerald-800"
+              className="flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white"
             >
               <Plus size={18} />
               Nova entidade
@@ -335,5 +244,60 @@ export function DashboardPage() {
         </nav>
       </section>
     </main>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+  detail,
+  icon,
+  tone = "default",
+}: {
+  label: string;
+  value: number;
+  detail: string;
+  icon: React.ReactNode;
+  tone?: "default" | "success" | "danger";
+}) {
+  const colored = tone !== "default";
+  const cardClass =
+    tone === "danger"
+      ? "bg-red-800 text-white"
+      : tone === "success"
+        ? "bg-emerald-700 text-white"
+        : "bg-white text-slate-950";
+
+  return (
+    <div className={`rounded-2xl p-3 shadow-sm sm:p-5 ${cardClass}`}>
+      <div className={`flex items-center gap-1.5 text-xs sm:gap-2 sm:text-sm ${colored ? "text-white/80" : "text-slate-500"}`}>
+        {icon}
+        <p className="font-medium">{label}</p>
+      </div>
+      <p className="mt-2 text-2xl font-black sm:mt-3 sm:text-4xl">{value}</p>
+      <p className={`mt-2 text-[10px] font-bold uppercase leading-tight tracking-wide sm:mt-3 sm:text-xs ${colored ? "text-white/80" : "text-emerald-700"}`}>
+        {detail}
+      </p>
+    </div>
+  );
+}
+
+function QuickLink({
+  to,
+  label,
+  icon,
+}: {
+  to: string;
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-3 text-sm font-bold text-emerald-700"
+    >
+      {icon}
+      {label}
+    </Link>
   );
 }

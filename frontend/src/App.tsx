@@ -17,6 +17,7 @@ import { EditUserPage } from "./pages/EditUserPage";
 import { EditEmployeePage } from "./pages/EditEmployeePage";
 import { ReportsPage } from "./pages/ReportsPage";
 import { CleaningRecordsDimensionReportPage } from "./pages/CleaningRecordsDimensionReportPage";
+import { MonitoringReportPage } from "./pages/MonitoringReportPage";
 
 function App() {
   return (
@@ -139,6 +140,15 @@ function App() {
           element={
             <ProtectedRoute>
               <CleaningRecordsDimensionReportPage dimension="entity" />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports/monitoring"
+          element={
+            <ProtectedRoute>
+              <MonitoringReportPage />
             </ProtectedRoute>
           }
         />

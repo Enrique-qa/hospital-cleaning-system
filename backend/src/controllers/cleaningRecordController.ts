@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { getEntityCleaningStatus } from "../utils/cleaningMonitoring";
 
 function normalizeName(name: string) {
   return name
@@ -38,6 +39,7 @@ export class CleaningRecordController {
     return res.json({
       entity,
       records,
+      monitoringStatus: getEntityCleaningStatus(entity, records),
     });
   }
   
@@ -50,7 +52,7 @@ export class CleaningRecordController {
 
     if (!typedIdentifier) {
       return res.status(400).json({
-        message: "Informe o nome ou código da funcionária.",
+        message: "Informe o nome ou código do funcionário.",
       });
     }
 
@@ -80,7 +82,7 @@ export class CleaningRecordController {
 
     if (!employee) {
       return res.status(400).json({
-        message: "Funcionária não encontrada ou inativa.",
+        message: "Funcionário não encontrado ou inativo.",
       });
     }
 
@@ -102,7 +104,7 @@ export class CleaningRecordController {
     if (recentRecord) {
       return res.status(409).json({
         message:
-          "Esta limpeza já foi registrada recentemente para esta funcionária.",
+          "Esta limpeza já foi registrada recentemente para este funcionário.",
       });
     }
 

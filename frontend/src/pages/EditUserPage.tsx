@@ -3,12 +3,13 @@ import type { AxiosError } from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
+import { USER_ROLE_LABELS, type UserRole } from "../utils/userRole";
 
 type User = {
   id: number;
   name: string;
   username: string;
-  role: "ADMIN" | "MANAGER";
+  role: UserRole;
   active: boolean;
 };
 
@@ -147,8 +148,8 @@ export function EditUserPage() {
                   onChange={(event) => updateField("role", event.target.value)}
                   className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                 >
-                  <option value="MANAGER">Manager</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="MANAGER">{USER_ROLE_LABELS.MANAGER}</option>
+                  <option value="ADMIN">{USER_ROLE_LABELS.ADMIN}</option>
                 </select>
               </div>
 

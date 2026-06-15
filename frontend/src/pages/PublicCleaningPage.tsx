@@ -213,11 +213,20 @@ export function PublicCleaningPage() {
               </ul>
             </div>
           )}
+
+          {entity.frequency && (
+            <div className="mt-4 rounded-xl bg-slate-50 p-3">
+              <h2 className="text-sm font-semibold text-slate-900">
+                Frequência da limpeza
+              </h2>
+              <p className="mt-1 text-sm text-slate-700">{entity.frequency}</p>
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="border-t border-slate-200 p-5">
           <label className="text-sm font-medium text-slate-800">
-            Nome ou código da funcionária
+            Nome ou código do funcionário
           </label>
 
           <input

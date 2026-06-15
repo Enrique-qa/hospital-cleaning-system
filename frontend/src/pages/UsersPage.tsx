@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
 import { api } from "../services/api";
+import {
+  getUserRoleLabel,
+  USER_ROLE_LABELS,
+  type UserRole,
+} from "../utils/userRole";
 
 type User = {
   id: number;
   name: string;
   username: string;
-  role: "ADMIN" | "MANAGER";
+  role: UserRole;
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -26,7 +31,10 @@ export function UsersPage() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"ADMIN" | "MANAGER">("MANAGER");
+  const [role, setRole] = useState<UserRole>("MANAGER");
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,6 +54,23 @@ export function UsersPage() {
       .then((response) => setUsers(response.data))
       .finally(() => setLoading(false));
   }, []);
+
+  const filteredUsers = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return users.filter((user) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        user.name.toLowerCase().includes(normalizedSearch) ||
+        user.username.toLowerCase().includes(normalizedSearch);
+      const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
+      const matchesStatus =
+        statusFilter === "ALL" ||
+        (statusFilter === "ACTIVE" ? user.active : !user.active);
+
+      return matchesSearch && matchesRole && matchesStatus;
+    });
+  }, [roleFilter, search, statusFilter, users]);
 
   async function handleCreate(event: React.FormEvent) {
     event.preventDefault();
@@ -132,12 +157,12 @@ export function UsersPage() {
             <select
               value={role}
               onChange={(event) =>
-                setRole(event.target.value as "ADMIN" | "MANAGER")
+                setRole(event.target.value as UserRole)
               }
               className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             >
-              <option value="MANAGER">Manager</option>
-              <option value="ADMIN">Admin</option>
+              <option value="MANAGER">{USER_ROLE_LABELS.MANAGER}</option>
+              <option value="ADMIN">{USER_ROLE_LABELS.ADMIN}</option>
             </select>
           </div>
 
@@ -163,26 +188,53 @@ export function UsersPage() {
         </form>
 
         <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
+          <div className="mb-4 grid gap-3 md:grid-cols-3">
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar por nome ou usuário"
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            />
+            <select
+              value={roleFilter}
+              onChange={(event) => setRoleFilter(event.target.value)}
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            >
+              <option value="ALL">Todos os perfis</option>
+              <option value="ADMIN">{USER_ROLE_LABELS.ADMIN}</option>
+              <option value="MANAGER">{USER_ROLE_LABELS.MANAGER}</option>
+            </select>
+            <select
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+              className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            >
+              <option value="ALL">Todos os status</option>
+              <option value="ACTIVE">Ativos</option>
+              <option value="INACTIVE">Inativos</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
             <h2 className="text-lg font-black text-slate-950">
               Usuários cadastrados
             </h2>
 
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-              {users.length} usuários
+              {filteredUsers.length} usuários
             </span>
           </div>
 
           {loading ? (
             <p className="mt-4 text-sm text-slate-600">Carregando...</p>
-          ) : users.length === 0 ? (
+          ) : filteredUsers.length === 0 ? (
             <p className="mt-4 text-sm text-slate-600">
               Nenhum usuário cadastrado.
             </p>
           ) : (
             <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
               <div className="divide-y divide-slate-200">
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <div
                     key={user.id}
                     className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_1fr_120px_100px_auto] md:items-center"
@@ -206,7 +258,7 @@ export function UsersPage() {
                     </div>
 
                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-center text-xs font-bold text-emerald-700">
-                      {user.role}
+                      {getUserRoleLabel(user.role)}
                     </span>
 
                     <span

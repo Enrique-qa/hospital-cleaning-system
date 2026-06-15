@@ -99,8 +99,8 @@ export function EmployeesPage() {
 
       setSuccess(
         employee.active
-          ? "Funcionário inativada com sucesso."
-          : "Funcionário ativada com sucesso."
+          ? "Funcionário inativado com sucesso."
+          : "Funcionário ativado com sucesso."
       );
 
       await loadEmployees();
@@ -113,8 +113,8 @@ export function EmployeesPage() {
     <main className="min-h-screen bg-slate-100 px-4 py-5">
       <section className="mx-auto max-w-4xl space-y-4">
         <AdminHeader
-          title="Funcionárias"
-          description="Cadastre colaboradoras autorizadas a registrar limpezas pelo QR Code."
+          title="Funcionários"
+          description="Cadastre colaboradores autorizados a registrar limpezas pelo QR Code."
           backTo="/"
           backLabel="Voltar ao dashboard"
         />
@@ -182,8 +182,8 @@ export function EmployeesPage() {
               className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             >
               <option value="ALL">Todos os status</option>
-              <option value="ACTIVE">Ativas</option>
-              <option value="INACTIVE">Inativas</option>
+              <option value="ACTIVE">Ativos</option>
+              <option value="INACTIVE">Inativos</option>
             </select>
           </div>
 
@@ -191,7 +191,7 @@ export function EmployeesPage() {
             <p className="mt-4 text-sm text-slate-600">Carregando...</p>
           ) : filteredEmployees.length === 0 ? (
             <p className="mt-4 text-sm text-slate-600">
-              Nenhuma funcionária encontrada.
+              Nenhum funcionário encontrado.
             </p>
           ) : (
             <div className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
@@ -218,7 +218,7 @@ export function EmployeesPage() {
                           : "text-sm text-red-700"
                       }
                     >
-                      {employee.active ? "Ativa" : "Inativa"}
+                      {employee.active ? "Ativo" : "Inativo"}
                     </p>
                   </div>
 

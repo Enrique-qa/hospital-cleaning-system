@@ -12,6 +12,14 @@ enum UserRole {
   MANAGER
 }
 
+enum CleaningFrequencyType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  AFTER_USE
+  CUSTOM
+}
+
 
 model Employee {
   id           Int      @id @default(autoincrement())
@@ -25,9 +33,9 @@ model Employee {
 }
 
 model CleaningEntity {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
-  slug        String  @unique
+  slug        String @unique
   type        String
   sector      String?
   location    String?
@@ -37,6 +45,14 @@ model CleaningEntity {
   cleaningSteps String
   products      String?
   frequency     String?
+
+  monitoringEnabled      Boolean               @default(true)
+  frequencyType          CleaningFrequencyType @default(DAILY)
+  expectedCleaningsPerDay Int?                  @default(1)
+  weeklyDays             Json?
+  monthlyDays            Json?
+  customIntervalHours    Int?
+  monitoringNotes        String?
 
   active Boolean @default(true)
 

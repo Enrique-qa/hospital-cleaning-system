@@ -2,8 +2,15 @@ import type { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
+import { MonitoringFields } from "../components/MonitoringFields";
 import { API_BASE_URL, api } from "../services/api";
 import { uploadEntityImage } from "../services/uploadEntityImage";
+import {
+    FREQUENCY_LABELS,
+    getMonitoringPayload,
+    INITIAL_MONITORING,
+    validateMonitoring,
+} from "../types/monitoring";
 
 const initialForm = {
     name: "",
@@ -32,6 +39,7 @@ export function NewEntityPage() {
 
     const [step, setStep] = useState(1);
     const [form, setForm] = useState(initialForm);
+    const [monitoring, setMonitoring] = useState(INITIAL_MONITORING);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const [imageUploading, setImageUploading] = useState(false);
@@ -89,6 +97,15 @@ export function NewEntityPage() {
             return;
         }
 
+        if (step === 2) {
+            const monitoringError = validateMonitoring(monitoring);
+
+            if (monitoringError) {
+                setError(monitoringError);
+                return;
+            }
+        }
+
         setStep((current) => current + 1);
     }
 
@@ -123,6 +140,7 @@ export function NewEntityPage() {
                 frequency: form.frequency || null,
                 cleaningSteps: stepsText,
                 imageUrl: form.imageUrl || null,
+                ...getMonitoringPayload(monitoring),
             });
 
             navigate(`/entities/${response.data.slug}`);
@@ -359,7 +377,7 @@ export function NewEntityPage() {
 
                                 <div>
                                     <label className="text-sm font-semibold text-slate-800">
-                                        Frequência
+                                        Frequência descrita no POP
                                     </label>
 
                                     <input
@@ -369,6 +387,11 @@ export function NewEntityPage() {
                                         className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                     />
                                 </div>
+
+                                <MonitoringFields
+                                    value={monitoring}
+                                    onChange={setMonitoring}
+                                />
 
                                 <div>
                                     <label className="text-sm font-semibold text-slate-800">
@@ -478,6 +501,17 @@ export function NewEntityPage() {
 
                                 <div className="rounded-xl bg-slate-50 p-4">
                                     <p className="text-xs font-semibold uppercase text-slate-500">
+                                        Monitoramento
+                                    </p>
+                                    <p className="mt-1 text-slate-800">
+                                        {monitoring.monitoringEnabled
+                                            ? FREQUENCY_LABELS[monitoring.frequencyType]
+                                            : "Não monitorado"}
+                                    </p>
+                                </div>
+
+                                <div className="rounded-xl bg-slate-50 p-4">
+                                    <p className="text-xs font-semibold uppercase text-slate-500">
                                         Passo a passo
                                     </p>
                                     <p className="mt-1 whitespace-pre-line text-slate-800">
@@ -500,12 +534,12 @@ export function NewEntityPage() {
                         </p>
                     )}
 
-                    <div className="mt-5 flex justify-between gap-3">
+                    <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-between sm:gap-3">
                         {step > 1 ? (
                             <button
                                 type="button"
                                 onClick={previousStep}
-                                className="rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700"
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 sm:w-auto"
                             >
                                 Voltar
                             </button>
@@ -517,7 +551,7 @@ export function NewEntityPage() {
                             <button
                                 type="button"
                                 onClick={nextStep}
-                                className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white"
+                                className="w-full rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white sm:w-auto"
                             >
                                 Próximo
                             </button>
@@ -526,7 +560,7 @@ export function NewEntityPage() {
                                 type="button"
                                 onClick={handleSubmit}
                                 disabled={saving}
-                                className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                                className="w-full rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60 sm:w-auto"
                             >
                                 {saving ? "Cadastrando..." : "Cadastrar entidade"}
                             </button>

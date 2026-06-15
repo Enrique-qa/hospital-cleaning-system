@@ -11,4 +11,10 @@ reportRoutes.get(
   reportController.cleaningRecords
 );
 
+reportRoutes.get(
+  "/reports/monitoring",
+  authMiddleware,
+  reportController.monitoring
+);
+
 export { reportRoutes };

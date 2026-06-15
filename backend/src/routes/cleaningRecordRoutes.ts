@@ -10,7 +10,7 @@ cleaningRecordRoutes.post(
   cleaningRecordController.createPublicRecord
 );
 
-cleaningRecordRoutes.use(authMiddleware);
+cleaningRecordRoutes.use("/cleaning-records", authMiddleware);
 
 cleaningRecordRoutes.get(
   "/cleaning-records/entity/:slug",

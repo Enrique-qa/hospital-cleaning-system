@@ -1,4 +1,10 @@
-import { Building2, CalendarDays, UserRound } from "lucide-react";
+import {
+  Activity,
+  Building2,
+  CalendarDays,
+  QrCode,
+  UserRound,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
 
@@ -10,7 +16,7 @@ const reports = [
     icon: CalendarDays,
   },
   {
-    title: "Por funcionária",
+    title: "Por funcionário",
     description: "Analise os registros de uma colaboradora no período.",
     to: "/reports/employees",
     icon: UserRound,
@@ -20,6 +26,18 @@ const reports = [
     description: "Consulte as limpezas realizadas em um ambiente ou equipamento.",
     to: "/reports/entities",
     icon: Building2,
+  },
+  {
+    title: "Monitoramento e pendências",
+    description: "Veja quais entidades estão fora da rotina configurada.",
+    to: "/reports/monitoring",
+    icon: Activity,
+  },
+  {
+    title: "QR Codes",
+    description: "Abra o relatório para impressão das etiquetas de acesso.",
+    to: "/entities/qr-report",
+    icon: QrCode,
   },
 ];
 
@@ -34,7 +52,7 @@ export function ReportsPage() {
           backLabel="Voltar ao dashboard"
         />
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {reports.map((report) => {
             const Icon = report.icon;
 

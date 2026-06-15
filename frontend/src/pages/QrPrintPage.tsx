@@ -57,8 +57,8 @@ export function QrPrintPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 p-6 print:bg-white print:p-0">
-      <div className="mx-auto mb-4 flex max-w-md items-center justify-between gap-3 print:hidden">
+    <main className="min-h-screen overflow-x-hidden bg-slate-100 p-3 sm:p-6 print:overflow-visible print:bg-white print:p-0">
+      <div className="mx-auto mb-4 flex max-w-md flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
         <Link
           to={`/entities/${entity.slug}`}
           className="text-sm font-semibold text-emerald-700"
@@ -69,13 +69,13 @@ export function QrPrintPage() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
+          className="w-full rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white sm:w-auto"
         >
           Imprimir etiqueta
         </button>
       </div>
 
-      <section className="mx-auto flex h-[7cm] w-[10cm] flex-col justify-between border-2 border-black bg-white p-[0.35cm] text-center shadow-sm print:shadow-none">
+      <section className="mx-auto flex h-[7cm] w-[10cm] max-w-full flex-col justify-between border-2 border-black bg-white p-[0.35cm] text-center shadow-sm print:max-w-none print:shadow-none">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wide text-blue-700">
             Hospital São Lucas

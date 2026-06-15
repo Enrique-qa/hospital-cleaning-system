@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import hospitalLogo from "../assets/logo-hospital.png";
 
 function getErrorMessage(error: unknown, fallback: string) {
   return (
@@ -46,9 +47,11 @@ export function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-6">
       <section className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-sm">
         <div className="text-center">
-          <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-blue-700">
-            Hospital São Lucas
-          </p>
+          <img
+            src={hospitalLogo}
+            alt="Hospital São Lucas"
+            className="mx-auto h-14 w-auto"
+          />
 
           <p className="mt-2 text-sm font-medium text-slate-500">
             Controle de Higienização

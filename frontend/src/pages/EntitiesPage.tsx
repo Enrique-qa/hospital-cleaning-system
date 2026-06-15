@@ -107,18 +107,18 @@ export function EntitiesPage() {
               </p>
             </div>
 
-            <div className="grid gap-2 md:grid-cols-[1fr_180px_180px]">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Buscar por nome, setor, tipo ou localização"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+                className="col-span-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
               />
 
               <select
                 value={typeFilter}
                 onChange={(event) => setTypeFilter(event.target.value)}
-                className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+                className="min-w-0 rounded-xl border border-slate-300 px-3 py-3 text-xs outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 sm:px-4 sm:text-sm"
               >
                 <option value="ALL">Todos os tipos</option>
                 <option value="AMBIENTE">Ambientes</option>
@@ -128,7 +128,7 @@ export function EntitiesPage() {
               <select
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value)}
-                className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+                className="min-w-0 rounded-xl border border-slate-300 px-3 py-3 text-xs outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 sm:px-4 sm:text-sm"
               >
                 <option value="ALL">Todos os status</option>
                 <option value="ACTIVE">Ativas</option>

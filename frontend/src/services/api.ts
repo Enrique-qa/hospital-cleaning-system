@@ -1,7 +1,12 @@
 import axios from "axios";
 
-export const API_BASE_URL = "http://localhost:3333"; //"http://192.168.2.187:3333" para mobile
+const configuredApiUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: configuredApiUrl
+    ? configuredApiUrl.replace(/\/+$/, "")
+    : `http://${window.location.hostname}:3333`,
+  timeout: 8000,
 });
+
+export const API_BASE_URL = String(api.defaults.baseURL);

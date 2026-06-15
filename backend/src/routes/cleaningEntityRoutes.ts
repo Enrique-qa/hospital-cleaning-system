@@ -10,7 +10,7 @@ cleaningEntityRoutes.get(
   cleaningEntityController.findBySlug
 );
 
-cleaningEntityRoutes.use(authMiddleware);
+cleaningEntityRoutes.use("/cleaning-entities", authMiddleware);
 
 cleaningEntityRoutes.post("/cleaning-entities", cleaningEntityController.create);
 cleaningEntityRoutes.get("/cleaning-entities", cleaningEntityController.list);

@@ -2,6 +2,11 @@ import type { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
+import {
+  PrintButton,
+  ReportPrintFooter,
+  ReportPrintHeader,
+} from "../components/ReportPrint";
 import { api } from "../services/api";
 
 type Dimension = "employee" | "entity";
@@ -81,7 +86,7 @@ export function CleaningRecordsDimensionReportPage({
 
     if (!selectedId) {
       setError(
-        isEmployee ? "Selecione uma funcionária." : "Selecione uma entidade."
+        isEmployee ? "Selecione um funcionário." : "Selecione uma entidade."
       );
       return;
     }
@@ -111,16 +116,26 @@ export function CleaningRecordsDimensionReportPage({
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-6">
-      <section className="mx-auto max-w-6xl space-y-4">
-        <AdminHeader
-          title={isEmployee ? "Relatório por funcionária" : "Relatório por entidade"}
-          description="Filtre os registros por período para acompanhar a operação."
-          backTo="/reports"
-          backLabel="Voltar para relatórios"
-        />
+    <main className="min-h-screen bg-slate-100 px-4 py-6 print:bg-white print:p-0">
+      <section className="mx-auto max-w-6xl space-y-4 print:max-w-none">
+        <div className="print:hidden">
+          <AdminHeader
+            title={isEmployee ? "Relatório por funcionário" : "Relatório por entidade"}
+            description="Filtre os registros por período para acompanhar a operação."
+            backTo="/reports"
+            backLabel="Voltar para relatórios"
+          />
+        </div>
 
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
+        {data && (
+          <ReportPrintHeader
+            title={isEmployee ? "Relatório por funcionário" : "Relatório por entidade"}
+            period={`${new Date(`${startDate}T00:00:00`).toLocaleDateString("pt-BR")} a ${new Date(`${endDate}T00:00:00`).toLocaleDateString("pt-BR")} • ${options.find((option) => String(option.id) === selectedId)?.name ?? ""}`}
+            total={data.total}
+          />
+        )}
+
+        <div className="rounded-2xl bg-white p-5 shadow-sm print:hidden">
           <div className="grid gap-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
             <select
               value={selectedId}
@@ -128,7 +143,7 @@ export function CleaningRecordsDimensionReportPage({
               className="rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
             >
               <option value="">
-                {isEmployee ? "Selecione a funcionária" : "Selecione a entidade"}
+                {isEmployee ? "Selecione o funcionário" : "Selecione a entidade"}
               </option>
               {options.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -173,8 +188,12 @@ export function CleaningRecordsDimensionReportPage({
         </div>
 
         {data && (
-          <div className="rounded-2xl bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+          <>
+          <div className="flex justify-end print:hidden">
+            <PrintButton />
+          </div>
+          <div className="rounded-2xl bg-white p-5 shadow-sm print:rounded-none print:shadow-none">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <h2 className="text-lg font-black text-slate-950">
                 Registros encontrados
               </h2>
@@ -192,15 +211,33 @@ export function CleaningRecordsDimensionReportPage({
                 data.records.map((record) => (
                   <div
                     key={record.id}
-                    className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_1fr_auto]"
+                    className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_1fr_auto] print:grid-cols-[1fr_1fr_auto] print:break-inside-avoid"
                   >
-                    <Link
-                      to={`/entities/${record.entity.slug}`}
-                      className="font-bold text-emerald-700"
-                    >
-                      {record.entity.name}
-                    </Link>
-                    <span className="text-slate-700">{record.employee.name}</span>
+                    <div>
+                      <Link
+                        to={`/entities/${record.entity.slug}`}
+                        className="font-bold text-emerald-700 print:text-slate-950"
+                      >
+                        {record.entity.name}
+                      </Link>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {record.entity.type === "AMBIENTE"
+                          ? "Ambiente"
+                          : "Equipamento"}
+                        {record.entity.sector ? ` • ${record.entity.sector}` : ""}
+                        {record.entity.location
+                          ? ` • ${record.entity.location}`
+                          : ""}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-700">
+                        {record.employee.name}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Código: {record.employee.employeeCode || "—"}
+                      </p>
+                    </div>
                     <span className="text-slate-600 md:text-right">
                       {new Date(record.cleanedAt).toLocaleString("pt-BR")}
                     </span>
@@ -209,6 +246,8 @@ export function CleaningRecordsDimensionReportPage({
               )}
             </div>
           </div>
+          <ReportPrintFooter />
+          </>
         )}
       </section>
     </main>

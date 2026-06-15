@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import type { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { AdminHeader } from "../components/AdminHeader";
+import {
+    PrintButton,
+    ReportPrintFooter,
+    ReportPrintHeader,
+} from "../components/ReportPrint";
 import { api } from "../services/api";
 
 type CleaningRecord = {
@@ -102,16 +107,26 @@ export function CleaningRecordsReportPage() {
     }, []);
 
     return (
-        <main className="min-h-screen bg-slate-100 px-4 py-5">
-            <section className="mx-auto max-w-6xl space-y-4">
-                <AdminHeader
-                    title="Relatório de limpezas"
-                    description="Consulte registros de higienização por período."
-                    backTo="/reports"
-                    backLabel="Voltar para relatórios"
-                />
+        <main className="min-h-screen bg-slate-100 px-4 py-5 print:bg-white print:p-0">
+            <section className="mx-auto max-w-6xl space-y-4 print:max-w-none">
+                <div className="print:hidden">
+                    <AdminHeader
+                        title="Relatório de limpezas"
+                        description="Consulte registros de higienização por período."
+                        backTo="/reports"
+                        backLabel="Voltar para relatórios"
+                    />
+                </div>
 
-                <div className="rounded-2xl bg-white p-5 shadow-sm">
+                {data && (
+                    <ReportPrintHeader
+                        title="Relatório de limpezas por período"
+                        period={`${new Date(`${data.startDate}T00:00:00`).toLocaleDateString("pt-BR")} a ${new Date(`${data.endDate}T00:00:00`).toLocaleDateString("pt-BR")}`}
+                        total={data.total}
+                    />
+                )}
+
+                <div className="rounded-2xl bg-white p-5 shadow-sm print:hidden">
                     <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
                         <div>
                             <label className="text-sm font-semibold text-slate-800">
@@ -162,6 +177,10 @@ export function CleaningRecordsReportPage() {
 
                 {data && (
                     <>
+                        <div className="flex justify-end print:hidden">
+                            <PrintButton />
+                        </div>
+
                         <div className="grid gap-3 md:grid-cols-3">
                             <div className="rounded-2xl bg-white p-5 shadow-sm">
                                 <p className="text-sm text-slate-500">Total de registros</p>
@@ -190,7 +209,7 @@ export function CleaningRecordsReportPage() {
                         </div>
 
                         <div className="rounded-2xl bg-white p-5 shadow-sm">
-                            <div className="flex items-center justify-between gap-3">
+                            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                                 <h2 className="text-lg font-black text-slate-950">
                                     Registros encontrados
                                 </h2>
@@ -253,6 +272,7 @@ export function CleaningRecordsReportPage() {
                                 )}
                             </div>
                         </div>
+                        <ReportPrintFooter />
                     </>
                 )}
             </section>

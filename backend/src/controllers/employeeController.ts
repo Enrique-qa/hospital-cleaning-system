@@ -33,7 +33,7 @@ export class EmployeeController {
 
     if (!name || String(name).trim() === "") {
       return res.status(400).json({
-        message: "O nome da funcionária é obrigatório.",
+        message: "O nome do funcionário é obrigatório.",
       });
     }
 
@@ -70,7 +70,7 @@ export class EmployeeController {
 
     if (!employee) {
       return res.status(404).json({
-        message: "Funcionária não encontrada.",
+        message: "Funcionário não encontrado.",
       });
     }
 
@@ -89,7 +89,7 @@ export class EmployeeController {
 
     if (!employeeExists) {
       return res.status(404).json({
-        message: "Funcionária não encontrada.",
+        message: "Funcionário não encontrado.",
       });
     }
 
